@@ -1,0 +1,12 @@
+{
+ (def 'NameReg 0xc31342b506d4b888ac0618f6193b48277dce9303)
+
+ (def 'bitvote_name "bitvote")
+
+ ;Thats me on the douglas testnet, i put it in and then change it to the 
+ ; actual changer, and set the actual OnePerID.
+ ;Only one the changer and OnePerID are set to something you trust, can you
+ ;trust the voting system.
+ (def 'initial_OnePerID_changer 0x1b127e588c21b1257f4f33e926d581e897a57c4c)
+
+}

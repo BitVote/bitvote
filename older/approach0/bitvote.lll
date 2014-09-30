@@ -1,0 +1,64 @@
+{
+ (include "defs.lll")
+ (include "bitvote_defs.lll")
+ 
+  [0] bitvote_name  ;Register to NameReg
+  (fcall NameReg 0 7 0 0)
+ 
+  (def iOnePerID        0x00)
+  (def iOnePerIDChanger 0x20)
+  [[iOnePerID]]    initial_OnePerIDChanger
+  [[iOnePerIDChanger]] 0 ;; The actual OnePerID.
+
+  (return 0 (lll {
+    ;OnePerID is speaking.
+    (when (= (caller) @@0x20) {
+      (on_cmd "reg"   ;Register someone.
+        { (when (= @@(calldataload 0x20) 0)
+            { [[(calldataload 0x20)]] (timestamp) })
+          (stop)
+        })
+      (on_cmd "dereg" ;Boot someone.
+        { [[(calldataload 0x20)]] 0
+          (stop)
+        })
+      (on_cmd "move" ;Change someones' address. (refuses if already taken.
+        { (unless (or @@(calldataload 0x20) (= (calldataload 0x20) (calldataload 0x40)))
+            { [[(calldataload 0x20)]] @@(calldataload 0x40)
+              [[(calldataload 0x40)]] 0
+            })
+          (stop)
+        })
+      (stop)
+      })
+    ;For iOnePerID, iOnePerIDChanger, asks that, otherwise asks for available
+    ; voting power.
+    (on_cmd "ask"
+      (return @@(calldataload 0)))
+
+    ;Changer is speaking, all it may do is change the changer and OnePerId
+    (when (and (= (caller) @@_OnePerIDChanger) (= (calldatasize) 0x40)) {
+      [[iOnePerID]]        (calldataload 0)
+      [[iOnePerIDChanger]] (calldataload 0x20)
+      (stop)
+      })
+
+    ;Otherwise, it is voting.
+    [0x00] @@(caller)
+
+    ;If you have enough.
+    (when (and @0x00 (> (timestamp) (+ @0x00 (calldataload 0x40)))) {
+      [0x20] (calldataload 0x20)  ;Topic voted on.
+      [0x40] (calldataload 0x40)  ;Amount.
+      (if (= (calldatasize) 0x60) ;Additional handler specified.
+        (fcall (calldataload 0x00) 0x20 0x40 0x60 0x20)  ;Send to registry.
+        (if (= (calldatasize) 0x40)
+          (fcall bitvote_topics 0x20 0x40 0x60 0x20) ;Default handler.
+          (stop))) ;Invalid message.
+    ;Account for it as spent.(dont believe the contract if it reports too high.)
+      (if (> @0x60 @0x40)
+        { [[(caller)]] (+ @0x00 @0x40) }
+        { [[(caller)]] (+ @0x00 @0x60) })
+      })
+  } 0))
+}

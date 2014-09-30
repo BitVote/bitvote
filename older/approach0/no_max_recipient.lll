@@ -1,0 +1,20 @@
+;Simple vote recipient. Accepts _all_ vote power given.
+{
+ [0] "VOTEFORMEIMGREAT!"  ;Register. Obnoxiously, of course!
+ (fcall 0xc31342b506d4b888ac0618f6193b48277dce9303 0 16 0 0)
+ 
+ [[0x00]] 0  ;Start at no votes.
+ [[0x20]] bitvote_addr  ;Note: it might be better just to replace @@0x20
+
+ (return 0 (lll {
+   (if (and (= (caller) @@0x20) (= (calldatasize) 0x40))
+       { ;It is the bit voter address telling us we're being voted on.
+         [[0x00]] (+ @@0x00 (calldataload 0))
+         [0x00] (calldataload 0)
+         (return 0x00 0x20)
+       }
+       {[0x00] @@0x00  ;Someone wants the current status.
+        (return 0x00 0x20)
+       })
+   } 0))
+}

@@ -1,0 +1,9 @@
+
+{
+ ;Do something upon getting a particula command.
+ (def '(on_cmd cmd then) (when (= (calldataload 0) cmd) then))
+
+ (def 'callgas 100)
+ ;Calls, no sending ether, default gas amount.
+ (def '(fcall addr in insz out outsz) (call (- (gas) callgas) addr 0 in insz out outsz))
+}
