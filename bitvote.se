@@ -1,0 +1,113 @@
+
+shared:
+    OnePerID = 0x00
+    OnePerIDSet = 0x20
+    TopicI = 0x40
+// 224 == 32*7, it is a lot, in the future likely 32, and magnet/swarm/contract links.
+    TopicSz = 224
+    
+    TopicStartI = 0x60
+    
+    HALFWAY = 340282366920938463463374607431768211456
+    LARGE = 1152921504606846976
+init:
+    contract.storage[OnePerID] = 0              // One per ID. (initially no one)
+    contract.storage[OnePerIDSet] = msg.sender  // One per ID setter.
+    contract.storage[TopicI] = TopicStartI
+code:
+    // One per ID speaking. (it controls registering and deregistering)
+    if msg.sender == contract.storage[OnePerID]:
+        if msg.data[1] < LARGE: //Exceedingly unlikely; 7e-37.
+            return("low address")
+        
+        if msg.datasize == 2:
+            if msg.data[0] == "register":
+                got = contract.storage[msg.data[1]]
+                if got:
+                    return("already registered")
+                // Splits slot in two halves.
+                contract.storage[msg.data[1]] = block.timestamp + HALFWAY*block.timestamp
+                return("registered")
+
+            if msg.data[0] == "deregister":  // One Per ID has a lot of power!
+                contract.storage[msg.data[1]] = 0
+                return("deregistered")
+
+            return("OnePerID bad 1")
+        
+        if msg.datasize == 3 && msg.data[0] == "move":
+            if msg.data[2] < LARGE: //Exceedingly unlikely; 7e-37.
+                return("low address")
+
+            if contract.storage[msg.data[2]]:
+                return("already exists there")
+            got = contract.storage[msg.data[1]]
+            if got:
+                contract.storage[msg.data[2]] = got
+                contract.storage[msg.data[1]] = 0
+                return("moved")
+            else: 
+                return("does not exist")
+        return("OnePerID bad 2")
+
+// One per ID changer speaking.
+    if msg.sender == contract.storage[OnePerIDSet]:
+        if msg.datasize != 2:
+            return("OnePerIDSet bad")
+        contract.storage[OnePerID]    = msg.data[0]
+        contract.storage[OnePerIDSet] = msg.data[1]
+        return("changed!")
+
+// Anyone speaking.
+    if msg.datasize == 1:
+        if msg.data[0] == "topic_count":
+            return((contract.storage[TopicI] - TopicStartI) / TopicSz)
+            
+        return("anyone bad 4")
+
+    if msg.datasize == 2:
+        if msg.data[0] == "vote_count":
+            if msg.data[1] >= ((contract.storage[TopicI] - TopicStartI)/TopicSz):
+                return("topic doesnt exist yet")
+            return(contract.storage[TopicStartI + msg.data[1]*TopicSz])
+
+        if msg.data[0] == "account": //Can also be used to get out OnePerId, 
+            return(contract.storage[msg.data[1]])
+        return("anyone bad 1")
+
+    if msg.datasize == 3: //Defined as being a vote.
+        if msg.data[0] == "vote":
+            if msg.data[1] >= (contract.storage[TopicI] - TopicStartI)/TopicSz:
+                return("topic doesnt exist yet(vote)")
+
+            slot = contract.storage[msg.sender]
+            if slot == 0:
+                return("cant vote, not registered")
+            if slot/HALFWAY + msg.data[2] > block.timestamp:
+                return("cannot spend more than you have")
+            // Use up the voting time.
+            contract.storage[msg.sender] = slot%HALFWAY + HALFWAY*(slot/HALFWAY + msg.data[2])
+            
+            // And give it to the topic.
+            cur = contract.storage[TopicStartI + msg.data[1]*TopicSz]
+            contract.storage[TopicStartI + msg.data[1]*TopicSz] = cur + msg.data[2]
+            return("voted")
+//        if msg.data[1] == "topic": // TODO Entirety of topic.
+        return("anyone bad 2")
+
+    if msg.datasize > 3:  // Creates a topic.
+        if msg.datasize > TopicSz - 0x20:
+            return("too long topic string")
+
+        i = contract.storage[TopicI]
+        j = i + 0x20
+        k = 0
+        tj = i + msg.datasize*0x20
+        while j < tj && msg.data[k] != "": // Set it.
+            contract.storage[j] = msg.data[k]
+            j = j + 0x20
+            k = k + 1
+
+        contract.storage[TopicI] = i + TopicSz
+        return("topic set")
+    return("anyone bad 3")
