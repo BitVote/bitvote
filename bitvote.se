@@ -1,3 +1,5 @@
+// TODO there is no name registry subscribing functionality.
+// Actually, maybe votable 'actions'?
 
 shared:
     OnePerID = 0x00
@@ -10,10 +12,15 @@ shared:
     
     HALFWAY = 340282366920938463463374607431768211456
     LARGE = 1152921504606846976
+
+    NAMEREG = 0x50441127ea5b9dfd835a9aba4e1dc9c1257b58ca
 init:
     contract.storage[OnePerID] = 0              // One per ID. (initially no one)
     contract.storage[OnePerIDSet] = msg.sender  // One per ID setter.
     contract.storage[TopicI] = TopicStartI
+
+    args = ["register", "bitvote"] // Ask to register in the namereg.
+    msg(tx.gas-100, NAMEREG, 0, args, 2)
 code:
     // One per ID speaking. (it controls registering and deregistering)
     if msg.sender == contract.storage[OnePerID]:
