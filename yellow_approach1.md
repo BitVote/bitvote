@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "MIAUW"
+title:  "Bitvote Yellow Paper 1"
 categories: Bitvote_yellowpaper
 ---
 
 **WORK IN PROGRESS**
-
-**TODO is it 1 or 2..**
 
 # Bitvote Yellow Paper 1
 
@@ -87,13 +85,31 @@ the person will have to do things to convince the system that he is infact
 a person that is not yet registered. An Ethereum address in control of the
 person is then registered. More about this in appendix.
 
-# Desirable features
+# User Interface
+We will mainly use HTML (+ CSS) + JS for creating user interfaces. It will
+consists of overview pages and buttons people can add to things.
+
+Note that anyone could in principle create user interfaces to Bitvote
+(or any Ethereum contract), and that is fine. Basically phishing is to create
+such pages, but ones that lie.
+
+We will likely use the method the Ethereum team suggests. Possibly this will be
+just having a system where people can indicate trusted re-displayers where they
+see the relevant state of the contract and the transaction they are sending.
+It would also be good to indicate the importance of the transaction so that
+people know when checking is particularly important.
+
+There is also the oppertunity there to try keep track of a list of phishers,
+and have some kind of warning system. Possibly including after-the fact.
+(likely as managed client-side as to maintain privacy.)
+
+# Other desirable features
 These features are not implemented:(yet)
 
-### Anonymity of votes
+### Privacy of votes
 Since they are votes, we dont want social pressure, threats, or sale to affect
-them. Anonymity protects against the first two, and can add uncertaintly of the
-parties for the third, in the case that you cant cryptographically link what 
+them. Privacy protects against the first two, and can add uncertaintly of the
+parties for the third in the case that you cant cryptographically link what 
 is voted on and a payment.
 
 Ring signatures are one aproach<sup>CRYPTONOTE</sup>, there might be other zero
