@@ -1,16 +1,16 @@
 
-default: bitvote_create.js
+default: build/bitvote_creator.js
 
-bitvote_create.js: bitvote.evm any_per_id.evm
-	sh create_launcher_js.sh
+build/bitvote_creator.js: build/bitvote.evm build/any_per_id.evm bitvote_creator_js.sh
+	sh bitvote_creator_js.sh > build/bitvote_creator.js
 
 test: test_cases
 
 test_cases:
 	python2 cases.py
 
-%.evm: %.lll
+build/%.evm: %.lll
 	lllc -x $< > $@
 
-%.evm: %.se
+build/%.evm: %.se
 	serpent compile $< > $@
