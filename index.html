@@ -1,0 +1,77 @@
+ <!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>BitVote Demo</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/bitvote.css">
+    <link rel="stylesheet" href="stylesheets/other.css">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+  </head>
+  <body>
+    <p>Note: **WIP** stripped a lot of text.</p>
+
+    <table><tr><td id="launch_state">Not created</td> <td>
+          <button id="creation" onclick="run_createNotLaunch()">Create</button>
+          <textarea id="launch_addr_input" rows="1" cols="55" oninput="update();"></textarea>
+      </td></tr>
+      <tr><td>Bitvote addr:</td><td><textarea id="bitvote_addr_input" rows="1" cols="55" oninput="set_from_input();"></textarea></td></tr>
+      <tr><td>OnePerID</td> <td id="oneperid">-</td></tr>
+      <tr><td>Changer</td> <td id="oneperid_set">-</td></tr>
+    </table>
+    
+    <hr>
+
+    <span id="voting_whole">
+      
+      <table>
+        <tr><td rowspan="4"><br><img src="images/bitvote_logo_smaller.png" alt="logo" /></td>
+          <td></td>
+          <td class="note">add</td> <td>CurrentTime:</td>      <td id="current_time"></td></tr>
+        <tr style="border-bottom: 2px"><td></td>
+          <td class="note">minus</td> <td>Registered Time:</td> <td id="register_time"></td></tr>
+        <tr><td></td>
+          <td class="note">minus</td> <td>Spent Vote-Time:</td>    <td id="spent_time"></td></tr>
+        <tr><td></td>
+          <td class="note">equals</td> <td>Available Vote-Time:</td>    <td id="power_time"></td></tr>
+      </table>
+      
+      <table>
+        <tr><td>Vote&sdot;Time:</td><td colspan="3">
+            <button id="toggle_manual" onclick="toggle_manual();">&rarr;Manual</button>
+            <input hidden type="number" id="spend_time" value="0" onkeyup="update_spend_time()" onchange="update_spend_time();">
+            <span id="spend_time_show"></span>
+            <br> <span id="increment_buttons"></span>
+          </td><td id="amount_note"></td></tr>
+        <br>
+        <tr><td>http://</td><td colspan="3">
+            <!-- Really we probably want a address input,
+                 that can do stuff like look at NameReg automatically.
+                 But also want to have it be an accepted votable.. -->
+            <input type="text" id="spend_addr" onkeyup="update_spend_addr()" onchange="update_spend_addr()"></td><td id="spend_addr_note"></td></tr>
+      </table> 
+      
+      
+      <button id="button" onclick="spend_time_button();">VOTE HERE</button> 
+      
+      <br><br>
+      
+      <p id="progress"></p>
+      <p id="passed"></p>
+    </span>
+    
+    <script src="javascripts/common.js"></script>
+    <script src="javascripts/contract.js"></script>
+    <script src="javascripts/do.js"></script>
+    <script src="build/bitvote_creator.js"></script>
+    <script src="javascripts/gui.js"></script>  
+    
+</body></html>
