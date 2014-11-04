@@ -17,11 +17,10 @@ function bitvoteAddr(without_alert) {
 }
 
 function find_own_vote_address() {
-    for( ; i < eth.keys.length ; i++) {
+    for(i=0 ; i < eth.keys.length ; i++) {
         addr = eth.secretToAddress(eth.keys[i]);
-        state = registeredState(addr);
         //Got it. TODO handle more than one. (and have warning about it)
-        if( state != "0x") { return addr; }
+        if( registeredState(addr) != "0x") { return addr; }
     }
     return null;
 }

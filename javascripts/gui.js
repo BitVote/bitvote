@@ -95,13 +95,15 @@ function update() {
         }
     } else {
         ge("message").hidden = true;
-        ge("message").innerText = "Have a register (text shouldnt show)";
+        ge("message").innerText = "Have a bitvote account (text shouldnt show)";
         // Fill in data.
         ge("oneperid_register").hidden = true;
         //TODO might want to use the actual timestamp from the block.
         // (eth.block(eth.number) doesnt work for me yet)
         timestamp = Math.floor((new Date()).getTime()/1000);
         ge("account_status").hidden = false;
+
+        state = registeredState(vote_addr);
         
         registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
         moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
@@ -116,7 +118,7 @@ function update() {
     list_str = "";
     ge("topic_count").innerText = n
     for( j = 0 ; j < n ; j+=1 ) {
-        list_str += "<tr><td>v" + eth.toDecimal(topicVotes(j));
+        list_str += "<tr><td>" + eth.toDecimal(topicVotes(j));
         list_str += "</td><td>" + topicString(j) + "</td></tr>";
     }
     ge("topic_list").innerHTML = list_str;
