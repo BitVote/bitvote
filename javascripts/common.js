@@ -23,6 +23,7 @@ function addr_text(addr) {
 }
 
 function hexify(data) {
+    if(data == null){ return data; }
     if(data.substr(0,2) != '0x'){ return "0x" + data; }
     return data;
 }

@@ -19,6 +19,7 @@
   <body>
     <p>Note: **WIP** stripped a lot of text.</p>
 
+    <!--Launching and viewing non-account, non-topic state-->
     <table><tr><td id="launch_state">Not created</td> <td>
           <button id="creation" onclick="run_createNotLaunch()">Create</button>
           <textarea id="launch_addr_input" rows="1" cols="55" oninput="update();"></textarea>
@@ -27,20 +28,31 @@
       <tr><td>OnePerID</td> <td id="oneperid">-</td></tr>
       <tr><td>Changer</td> <td id="oneperid_set">-</td></tr>
     </table>
+
+    <!--Registering with the OnePerID-->
+    <span id="oneperid_register" hidden="true">
+      <hr>
+      <h4>Registering:</h4>
+      <textarea id="oneperid_register_input" rows="1" cols="55" oninput="update();"></textarea>
+      <br><span id="oneperid_register_note"></span>
+      <button onclick="run_register();">Register</button>
+    </span>
     
     <hr>
-
-    <span id="voting_whole">
-      
+    <!--Available vote time.-->
+    <p style="float:left;padding:2%;font-size:70%;color:#555">
+      <img src="images/bitvote_logo_smaller.png" alt="logo" />
+    </p>
+    <span id="message">This message should disappear when the javascript runs.</span>
+    <span id="voting_whole" hidden="true">
       <table>
-        <tr><td rowspan="4"><br><img src="images/bitvote_logo_smaller.png" alt="logo" /></td>
-          <td></td>
+         <tr>
           <td class="note">add</td> <td>CurrentTime:</td>      <td id="current_time"></td></tr>
-        <tr style="border-bottom: 2px"><td></td>
+        <tr style="border-bottom: 2px">
           <td class="note">minus</td> <td>Registered Time:</td> <td id="register_time"></td></tr>
-        <tr><td></td>
+        <tr>
           <td class="note">minus</td> <td>Spent Vote-Time:</td>    <td id="spent_time"></td></tr>
-        <tr><td></td>
+        <tr>
           <td class="note">equals</td> <td>Available Vote-Time:</td>    <td id="power_time"></td></tr>
       </table>
       
@@ -72,6 +84,7 @@
     <script src="javascripts/contract.js"></script>
     <script src="javascripts/do.js"></script>
     <script src="build/bitvote_creator.js"></script>
-    <script src="javascripts/gui.js"></script>  
+    <script src="javascripts/gui.js"></script>
+    <script>update();</script>
     
 </body></html>
