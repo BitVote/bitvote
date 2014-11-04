@@ -16,6 +16,16 @@ function bitvoteAddr(without_alert) {
     return hexify(bitvote_addr);
 }
 
+function find_own_vote_address() {
+    for( ; i < eth.keys.length ; i++) {
+        addr = eth.secretToAddress(eth.keys[i]);
+        state = registeredState(addr);
+        //Got it. TODO handle more than one. (and have warning about it)
+        if( state != "0x") { return addr; }
+    }
+    return null;
+}
+
 // Access storage elements from bitvote in particular.
 function bvStateAt(_s) { return eth.stateAt(bitvoteAddr(), _s); }
 
@@ -25,16 +35,20 @@ function onePerIDSet(){ return bvStateAt("0x20"); }
 
 var TopicI = 0x40;
 var TopicStartI = 0x60;
+var TopicSz = 224;
 
 // Asking stuff about topics.
-function topicN() { return (bvStateAt(TopicI) - TopicStartI)/TopicSz; }
+function topicN() {
+    i = eth.toDecimal(bvStateAt(TopicI)).valueOf();
+    return (i - TopicStartI)/TopicSz;
+}
 
 function topicVotes(i) {  // Returns the amount of votes received.
-    if(i>0 || i < topic_n()) { return null; }
+    if(i<0 || i >= topicN()) { return null; }
     return bvStateAt(TopicStartI + TopicSz*i);
 }
 function topicString(i) {  // Returns the vote amount on a topic and the string.
-    if(i>0 || i < topic_n()) { return null; }
+    if(i<0 || i >= topicN()) { return null; }
     
     k = TopicStartI + TopicSz*i + 0x20;
 

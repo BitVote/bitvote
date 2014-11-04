@@ -17,11 +17,15 @@ function run_createNotLaunch() {
 }
 
 function run_launch() {
-    set_anyperid(hexify(ge("launch_addr_input").value), update);
+    setAnyPerID(hexify(ge("launch_addr_input").value), update);
 }
 
 function run_register() {
-    register_oneperid(ge("oneperid_register_input").value, update);
+    registerOnePerID(ge("oneperid_register_input").value, update);
+}
+
+function run_createTopic() {
+    createTopic(ge("topic_string_input").value, eth.key, update);
 }
 
 //TODO more notes about input.
@@ -69,35 +73,11 @@ function update() {
     ge("oneperid_set").innerText = addr_text(onePerIDSet());
 
     // Look up own registered accounts.
-    i = 0;
-    for( ; i < eth.keys.length ; i++) {
-        addr = eth.secretToAddress(eth.keys[i]);
-        state = registeredState(addr);
-      //Got it. TODO handle more than one. (and have warning about it)
-        if( state != "0x") {
-            ge("message").hidden = true;
-            ge("message").innerText = "Have a register (text shouldnt show)";
-            // Fill in data.
-            ge("oneperid_register").hidden = true;
-            //TODO might want to use the actual timestamp from the block.
-            // (eth.block(eth.number) doesnt work for me yet)
-            timestamp = Math.floor((new Date()).getTime()/1000);
-            ge("account_status").hidden = false;
-            
-            registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
-            moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
-
-            ge("current_time").innerText = timestamp; //"todo need time stamp";
-            ge("register_time").innerText = registered_time;
-            ge("spent_time").innerText = moving_time - registered_time;
-            ge("power_time").innerText = timestamp - moving_time;
-            break;
-        }
-    }
-    if(i == eth.keys.length) {  //No address.
+    vote_addr = find_own_vote_address();
+    if( vote_addr == null ) {
         ge("message").hidden = false;
         ge("message").innerText = "Dont control any address with bitvote account.";
-        //Show info on how to register.
+      //Show info on how to register.
         ge("oneperid_register").hidden = false;
         ge("account_status").hidden = true;
 
@@ -113,5 +93,31 @@ function update() {
             note.innerText = "That address already sets the OnePerID";
             note.className = "warn";
         }
+    } else {
+        ge("message").hidden = true;
+        ge("message").innerText = "Have a register (text shouldnt show)";
+        // Fill in data.
+        ge("oneperid_register").hidden = true;
+        //TODO might want to use the actual timestamp from the block.
+        // (eth.block(eth.number) doesnt work for me yet)
+        timestamp = Math.floor((new Date()).getTime()/1000);
+        ge("account_status").hidden = false;
+        
+        registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
+        moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
+
+        ge("current_time").innerText = timestamp; //"todo need time stamp";
+        ge("register_time").innerText = registered_time;
+        ge("spent_time").innerText = moving_time - registered_time;
+        ge("power_time").innerText = timestamp - moving_time;
     }
+    // Topic list stuff.
+    n = topicN();
+    list_str = "";
+    ge("topic_count").innerText = n
+    for( j = 0 ; j < n ; j+=1 ) {
+        list_str += "<tr><td>v" + eth.toDecimal(topicVotes(j));
+        list_str += "</td><td>" + topicString(j) + "</td></tr>";
+    }
+    ge("topic_list").innerHTML = list_str;
 }

@@ -14,7 +14,7 @@
         <![endif]-->
   </head>
   <body>
-    <p>Note: **WIP** stripped a lot of text.</p>
+    <p>Note: **WIP**.</p>
 
     <!--Launching and viewing non-account, non-topic state-->
     <table><tr><td id="launch_state">Not created</td> <td>
@@ -71,8 +71,16 @@
       <button id="button" onclick="spend_time_button();">Vote</button> 
     </span>
     <!--Topic Creation TODO-->
+    <p id="topic_creation"><hr>
+      <textarea id="topic_string_input" rows="3" cols="55" oninput="update();"></textarea>
+      <br><button onclick="run_createTopic()">Create topic</button>
+    </p>
     <!--Topic list TODO-->
-    
+    <p>
+      Topic count: <span id="topic_count"></span>
+
+      <table id="topic_list"></table>
+    </p>
     
     <script src="javascripts/common.js"></script>
     <script src="javascripts/contract.js"></script>
