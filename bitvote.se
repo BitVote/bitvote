@@ -23,6 +23,8 @@ init:
     //msg(tx.gas-100, NAMEREG, 0, args, 2)  // TODO need facilities.
 code:
     // One per ID speaking. (it controls registering and deregistering)
+    // NOTE: registering OnePerID(setter), those two addresses will only be able
+    // to do their special position.
     if msg.sender == contract.storage[OnePerID]:
         if msg.data[1] < LARGE: //Exceedingly unlikely; 7e-37.
             return("low address")
@@ -57,7 +59,7 @@ code:
                 return("does not exist")
         return("OnePerID bad 2")
 
-// One per ID changer speaking.
+// One per ID changer speaking. //TODO prepend the name of the command.
     if msg.sender == contract.storage[OnePerIDSet]:
         if msg.datasize != 2:
             return("OnePerIDSet bad")
