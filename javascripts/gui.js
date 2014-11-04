@@ -78,7 +78,7 @@ function update() {
             ge("message").hidden = true;
             ge("message").innerText = "Have a register (text shouldnt show)";
             // Fill in data.
-            // timestamp = TODOX
+            // timestamp = TODO
             registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
             moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
 
