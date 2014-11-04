@@ -58,8 +58,13 @@ function createTopic(string, priv, fun) {
     eth.transact({"from":priv, "to":bitvoteAddr(), "value":0, "data":data}); //TODO
 }
 
-function runVote(vote_addr) {
+function vote(vote_addr, index, amount) {
     if(safety && registeredState(vote_addr)=="0x") {
         alert("This doesnt look to be a registered account."); return;
     }
+    priv = got_privkey(launch_addr);
+    if(priv == null){ alert("You dont have the private key of address.");  return;}
+    
+    eth.transact({"from":priv, "to":bitvoteAddr(), "value":0,
+                  "data":["vote", index, amount]});
 }
