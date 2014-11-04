@@ -100,7 +100,8 @@ function update() {
         note = ge("oneperid_register_note");
         note.innerText = "";
         note.className = "";
-        if(got_privkey(hexify(input)) == null) {
+        if(input == "") {
+        } else if(got_privkey(hexify(input)) == null) {
             note.innerText = "dont have this private key";
             note.className = "warn";
         } else if( hexify(input) == onePerIDSet() ) {

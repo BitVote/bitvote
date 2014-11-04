@@ -1,0 +1,13 @@
+/*td{vertical-align:text-top;}*/
+
+.wrong{ color:red }
+.warn{ color:red }
+.note{ color:#777 }
+.hint{ color:#444 }
+
+#spend_addr{width:95%}
+#spend_time{width:60%}
+
+#to_fraction{width:6em}
+
+.grey_button{color:#888}
