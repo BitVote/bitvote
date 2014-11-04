@@ -19,8 +19,8 @@ init:
     contract.storage[OnePerIDSet] = msg.sender  // One per ID setter.
     contract.storage[TopicI] = TopicStartI
 
-    args = ["register", "bitvote"] // Ask to register in the namereg.
-    msg(tx.gas-100, NAMEREG, 0, args, 2)  // TODO need facilities.
+    //args = ["register", "bitvote"] // Ask to register in the namereg.
+    //msg(tx.gas-100, NAMEREG, 0, args, 2)  // TODO need facilities.
 code:
     // One per ID speaking. (it controls registering and deregistering)
     if msg.sender == contract.storage[OnePerID]:

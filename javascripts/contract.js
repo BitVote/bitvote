@@ -3,13 +3,9 @@
 var NameReg_addr = "0x50441127ea5b9dfd835a9aba4e1dc9c1257b58ca";
 
 var bitvote_addr = null;
-var anyperid_addr = null
 
 function myAddr() {
     return eth.secretToAddress(eth.key)
-}
-function launchAddr() {
-    return eth.secretToAddress(launch_key);
 }
 
 function bitvoteAddr() {
@@ -17,32 +13,16 @@ function bitvoteAddr() {
     //   contract ever changes name.
     // if(bitvote_addr == null) { 
     //   bitvote_addr = eth.stateAt(NameReg_addr, eth.fromAscii("BitVote")); }
-    return bitvote_addr;
-}
-
-function mayCreateNotLaunch(bitvote_fun, anyperid_fun) {
-    maybe_addr = bitvoteAddr();
-    if(maybe_addr != '0x' && maybe_addr != null) {
-        alert("Already created!");
-        return;
-    }
-    createNotLaunch(launch_key, bitvote_fun, anyperid_fun);
-}
-
-// NOTE Non-serious of course, AnyPerID is a bad OnePerID, and user keeps
-//  total control over it.
-function launch(fun) {
-    addr = bitvoteAddr();
-    if(addr == '0x' || addr == null || anyperid_addr == '0x' || anyperid_addr == null) {
-        alert("Need to create contracts first!");
-        return;
-    }
-    data = [anyperid_addr, launch_key];
-    eth.transact({"from":launch_key, "to":addr, "value":0, "data":data}, fun);
+    if(bitvote_addr==null){ alert("no addr"); }
+    return hexify(bitvote_addr);
 }
 
 // Access storage elements from bitvote in particular.
-function bvStateAt(_s) { return stateAt(bitvoteAddr(), _s) }
+function bvStateAt(_s) { return eth.stateAt(bitvoteAddr(), _s); }
+
+// Which is the One Per ID according to bitvote.
+function onePerID(){ return bvStateAt("0x00"); }
+function onePerIDSet(){ return bvStateAt("0x20"); }
 
 var TopicI = 0x40;
 var TopicStartI = 0x60;
