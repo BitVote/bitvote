@@ -78,15 +78,17 @@ function update() {
             ge("message").hidden = true;
             ge("message").innerText = "Have a register (text shouldnt show)";
             // Fill in data.
+            ge("oneperid_register").hidden = true;
             // timestamp = TODO
+            ge("account_status").hidden = false;
+            
             registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
             moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
 
-            ge("current_time") = "todo need time stamp";
-            ge("register_time") = registered_time;
-            ge("spent_time") = moving_time - registered_time;
-            ge("power_time") = "todo need time stamp";
-            ge("oneperid_register").hidden = true;
+            ge("current_time").innerText = "todo need time stamp";
+            ge("register_time").innerText = registered_time;
+            ge("spent_time").innerText = moving_time - registered_time;
+            ge("power_time").innerText = "todo need time stamp";
             break;
         }
     }
@@ -95,6 +97,7 @@ function update() {
         ge("message").innerText = "Dont control any address with bitvote account.";
         //Show info on how to register.
         ge("oneperid_register").hidden = false;
+        ge("account_status").hidden = true;
 
         input = ge("oneperid_register_input").value;
         note = ge("oneperid_register_note");

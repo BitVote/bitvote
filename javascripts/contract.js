@@ -53,7 +53,9 @@ function registeredState(addr) {
 }
 
 function stateRegisteredTime(state) {
-    return "0x" + state.substr(2,34); // First part.
+    substr = state.substr(2,32);
+    for(i= substr.length -1 ; i>=0 ; i-=1) { if(substr[i]!='0'){ i +=1; break; } }
+    return "0x" + substr.substr(0, i); // First part.
 }
 function stateVoteTime(addr) {
     if(addr == null) { addr = myAddr() }
