@@ -79,16 +79,18 @@ function update() {
             ge("message").innerText = "Have a register (text shouldnt show)";
             // Fill in data.
             ge("oneperid_register").hidden = true;
-            // timestamp = TODO
+            //TODO might want to use the actual timestamp from the block.
+            // (eth.block(eth.number) doesnt work for me yet)
+            timestamp = Math.floor((new Date()).getTime()/1000);
             ge("account_status").hidden = false;
             
             registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
             moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
 
-            ge("current_time").innerText = "todo need time stamp";
+            ge("current_time").innerText = timestamp; //"todo need time stamp";
             ge("register_time").innerText = registered_time;
             ge("spent_time").innerText = moving_time - registered_time;
-            ge("power_time").innerText = "todo need time stamp";
+            ge("power_time").innerText = timestamp - moving_time;
             break;
         }
     }
