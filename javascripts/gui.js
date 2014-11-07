@@ -30,6 +30,9 @@ function run_createTopic() {
 
 //TODO more notes about input.
 
+//TODO this doesnt scale, horribly slow for too many votable items..
+var topic_list = [];
+
 function update() {
     // No contract in existance yet.
     if(bitvoteAddr(true) == null || bitvoteAddr(true) == "0x") {
@@ -117,9 +120,37 @@ function update() {
     n = topicN();
     list_str = "";
     ge("topic_count").innerText = n
+    topic_list = [];
     for( j = 0 ; j < n ; j+=1 ) {
-        list_str += "<tr><td>" + eth.toDecimal(topicVotes(j));
-        list_str += "</td><td>" + topicString(j) + "</td></tr>";
+        votes = eth.toDecimal(topicVotes(j)).valueOf();
+        string = topicString(j);
+        topic_list.push([votes, string]);
+        list_str += "<tr><td>" + votes);
+        list_str += "</td><td>" + string + "</td></tr>";
     }
     ge("topic_list").innerHTML = list_str;
+
+    update_suggest();
+}
+
+var vote_way = "string";
+function vote_way_toggle() {
+    if(vote_way == "string") {
+        vote_way = "index";
+        ge("vote_way").innerText = "By index";
+    } else if(vote_way == "index") {
+        vote_way = "string";
+        ge("vote_way").innerText = "By string";        
+    } else { alert("Variable vote_way is wrong"); }
+    update_suggest();
+}
+
+function update_suggest() {
+    el = ge("suggest_for")    
+    if(vote_way == "string") {
+        el.innerHTML = "TODO string-searching voting."
+    } else if(vote_way == "index") {
+        el.innerHTML = topicString(ge("vote_for_input").value);
+        el.hidden = false;
+    } else { alert("Variable vote_way is wrong"); }
 }

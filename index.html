@@ -38,10 +38,11 @@
     <hr>
     <!--Available vote time.-->
     <p style="float:left;padding:2%;font-size:70%;color:#555">
-      <img src="images/bitvote_logo_smaller.png" alt="logo" />
+      
     </p>
     <span id="message">This message should disappear when the javascript runs.</span>
     <span id="account_status" hidden="true">
+      <table><tr><td><img src="images/bitvote_logo_smaller.png" alt="logo" /></td><td>
       <table>
          <tr>
           <td class="note">add</td> <td>CurrentTime:</td>      <td id="current_time"></td></tr>
@@ -51,26 +52,21 @@
           <td class="note">minus</td> <td>Spent Vote-Time:</td>    <td id="spent_time"></td></tr>
         <tr>
           <td class="note">equals</td> <td>Available Vote-Time:</td>    <td id="power_time"></td></tr>
-      </table>
-      
+      </table></td></tr></table>
+      <!-- Voting interface -->
       <table>
-        <tr><td>Vote&sdot;Time:</td><td colspan="3">
-            <button id="toggle_manual" onclick="toggle_manual();">&rarr;Manual</button>
-            <input hidden type="number" id="spend_time" value="0" onkeyup="update_spend_time()" onchange="update_spend_time();">
-            <span id="spend_time_show"></span>
-            <br> <span id="increment_buttons"></span>
-          </td><td id="amount_note"></td></tr>
-        <br>
-        <tr><td></td><td colspan="3">
-            <!-- Really we probably want a address input,
-                 that can do stuff like look at NameReg automatically.
-                 But also want to have it be an accepted votable.. -->
-            <input type="text" id="spend_addr" onkeyup="update_spend_addr()" onchange="update_spend_addr()"></td><td id="spend_addr_note"></td></tr>
-      </table> 
-            
-      <button id="button" onclick="spend_time_button();">Vote</button> 
+        <tr><td>Vote:</td><td>For:<button id="vote_way" onclick="vote_way_toggle();">By string</button></td>
+          <td>
+            <textarea id="vote_for_input" rows="1" cols="40" oninput="update();" onchange="update_suggest();"></textarea>
+            <p id="suggest_for" hidden="true"></p>
+        </td></tr>
+        <tr><td></td><td>Amount:</td>
+          <td><textarea id="vote_amount_input" rows="1" cols="40" oninput="update();"></textarea></td></tr>
+        <tr><td></td><td></td>
+          <td><button id="button" onclick="spend_time_button();">Vote</button> </td></tr>
+      </table>
     </span>
-    <!--Topic Creation TODO-->
+    <!--Topic Creation-->
     <p id="topic_creation"><hr>
       <textarea id="topic_string_input" rows="3" cols="55" oninput="update();"></textarea>
       <br><button onclick="run_createTopic()">Create topic</button>
