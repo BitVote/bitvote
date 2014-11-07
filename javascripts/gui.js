@@ -33,6 +33,16 @@ function run_createTopic() {
 //TODO this doesnt scale, horribly slow for too many votable items..
 var topic_list = [];
 
+function search_topic_list(string) {
+    out = [];
+    for(i=0 ; i < topic_list.length ; i++) {
+        k = topic_list[i][1].search(string);
+        if(k!=-1){ out.push(k); }
+    }
+    return out;
+}
+
+// TODO before updating, check if anything changed, needing update.
 function update() {
     // No contract in existance yet.
     if(bitvoteAddr(true) == null || bitvoteAddr(true) == "0x") {
@@ -125,7 +135,7 @@ function update() {
         votes = eth.toDecimal(topicVotes(j)).valueOf();
         string = topicString(j);
         topic_list.push([votes, string]);
-        list_str += "<tr><td>" + votes);
+        list_str += "<tr><td>" + votes;
         list_str += "</td><td>" + string + "</td></tr>";
     }
     ge("topic_list").innerHTML = list_str;
@@ -146,11 +156,27 @@ function vote_way_toggle() {
 }
 
 function update_suggest() {
-    el = ge("suggest_for")    
+    el = ge("suggest_for");
+    el.hidden = false;    
+    input = ge("vote_for_input").value;    
     if(vote_way == "string") {
-        el.innerHTML = "TODO string-searching voting."
+        if( input.length < 4 ){ el.hidden = true; el.innerText = "(too short)"; return; }
+        list = search_topic_list(input);
+        if(list.length == 0) { el.hidden = true; el.innerText = "None found."; return; }
+        html = "<table>";
+        for( i = 0 ; i < list.length ; i++ ) {
+            list_el = topic_list[list[i]];
+            html += "<tr><td>" + list[i] + "</td><td>";
+            html += list_el[0] + "</td><td>" + list_el[1] + "</td></tr>";
+        }
+        html += "</table>";
+        el.innerHTML = html;
     } else if(vote_way == "index") {
-        el.innerHTML = topicString(ge("vote_for_input").value);
-        el.hidden = false;
+        if(input == ""){ el.hidden = true; el.innerText = "(none found)"; return; }
+        string = topicString(input);
+        if(string == null){
+            el.innerText = "Not an integer, or integer too high/negative."; return;
+        }
+        el.innerText = string;
     } else { alert("Variable vote_way is wrong"); }
 }
