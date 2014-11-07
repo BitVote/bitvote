@@ -11,6 +11,7 @@ function set_from_input() {
     if_both_created();
 }
 
+// `run_...` makes transactions.
 function run_createNotLaunch() {
     mayCreateNotLaunch(function(addr){ bitvote_addr = addr;  if_both_created(); },
                        function(addr){ if_both_created(addr); });
@@ -30,7 +31,7 @@ function run_createTopic() {
 
 function run_vote() {
     if(got_index == null){ alert("Dont have an index to vote for."); return; }
-    vote(got_index, ge("vote_amount_input").value);
+    vote(ge("vote_from_addr_input").value, got_index, ge("vote_amount_input").value);
 }
 //TODO more notes about input.
 
@@ -145,8 +146,13 @@ function update() {
     ge("topic_list").innerHTML = list_str;
 
     update_suggest();
+
+    if( ge("vote_from_addr_input").value == "" ){
+        ge("vote_from_addr_input").value = find_own_vote_address();
+    }
 }
 
+// Way to search for votes.. (TODO better naming)
 var vote_way = "string";
 
 function vote_way_to_index() {
@@ -171,6 +177,7 @@ function vote_way_toggle() {
 var got_index = null;
 var unlocked = false;
 
+//...
 function unselect(){ got_index = null; ge("vote_button").hidden = true; }
 
 function select_i(j) {
@@ -236,4 +243,9 @@ function update_suggest() {
         }
         el.innerText = string;
     } else { alert("Variable vote_way is wrong"); }
+}
+
+function add_time(add) {
+    el = ge("vote_amount_input");
+    el.value = parseInt(el.value) + add;
 }

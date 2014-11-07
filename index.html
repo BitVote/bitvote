@@ -20,9 +20,9 @@
     <!--Launching and viewing non-account, non-topic state-->
     <table><tr><td id="launch_state">Not created</td> <td>
           <button id="creation" onclick="run_createNotLaunch()">Create</button>
-          <textarea id="launch_addr_input" rows="1" cols="55" oninput="update();"></textarea>
+          <textarea id="launch_addr_input" rows="1" cols="50" oninput="update();"></textarea>
       </td></tr>
-      <tr><td>Bitvote addr:</td><td><textarea id="bitvote_addr_input" rows="1" cols="55" oninput="set_from_input();"></textarea></td></tr>
+      <tr><td>Bitvote addr:</td><td><textarea id="bitvote_addr_input" rows="1" cols="50" oninput="set_from_input();"></textarea></td></tr>
       <tr><td>OnePerID</td> <td id="oneperid">-</td></tr>
       <tr><td>Changer</td> <td id="oneperid_set">-</td></tr>
     </table>
@@ -31,7 +31,7 @@
     <span id="oneperid_register" hidden="true">
       <hr>
       <h4>Registering:</h4>
-      <textarea id="oneperid_register_input" rows="1" cols="55" oninput="update();"></textarea>
+      <textarea id="oneperid_register_input" rows="1" cols="50" oninput="update();"></textarea>
       <br><span id="oneperid_register_note"></span>
       <button onclick="run_register();">Register</button>
     </span>
@@ -56,20 +56,34 @@
       </table></td></tr></table>
       <!-- Voting interface -->
       <table>
-        <tr><td>Vote:</td><td>For:<button id="vote_way" onclick="vote_way_toggle();">By string</button></td>
+        <tr><td>Vote:</td>
+          <td>From:</td><td>
+            <textarea id="vote_from_addr_input" rows="1" cols="50"></textarea>
+        </td></tr>
+
+        <tr><td></td>
+          <td>For:<button id="vote_way" onclick="vote_way_toggle();">By string</button></td>
           <td>
             <textarea id="vote_for_input" rows="1" cols="40" oninput="update();" onchange="update_suggest();"></textarea>
             <p id="suggest_for" hidden="true"></p>
         </td></tr>
         <tr><td></td><td>Amount:</td>
-          <td><textarea id="vote_amount_input" rows="1" cols="40"></textarea></td></tr>
+          <td>
+            <button onclick="add_time(1);">+s</button>
+            <button onclick="add_time(60);">+m</button>
+            <button onclick="add_time(3600);">+h</button>
+            <button onclick="add_time(86400);">+d</button>
+            <button onclick="add_time(604800);">+w</button>
+            <button onclick="add_time(2592000);">+M</button>
+            <button onclick="add_time(31557600);">+Y</button><br>
+            <textarea id="vote_amount_input" rows="1" cols="40">0</textarea></td></tr>
         <tr><td></td><td></td>
           <td><button id="vote_button" hidden="true" onclick="vote_step();">Vote</button> </td></tr>
       </table>
     </span>
     <!--Topic Creation-->
     <p id="topic_creation"><hr>
-      <textarea id="topic_string_input" rows="3" cols="55" oninput="update();"></textarea>
+      <textarea id="topic_string_input" rows="3" cols="50" oninput="update();"></textarea>
       <br><button onclick="run_createTopic()">Create topic</button>
     </p>
     <!--Topic list TODO-->
