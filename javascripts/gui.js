@@ -29,7 +29,8 @@ function run_createTopic() {
 }
 
 function run_vote() {
-    
+    if(got_index == null){ alert("Dont have an index to vote for."); return; }
+    vote(got_index, ge("vote_amount_input").value);
 }
 //TODO more notes about input.
 
@@ -147,14 +148,22 @@ function update() {
 }
 
 var vote_way = "string";
+
+function vote_way_to_index() {
+    vote_way = "index";
+    ge("vote_way").innerText = "By index";
+}
+function vote_way_to_string() {
+    vote_way = "string";
+    ge("vote_way").innerText = "By string";
+}
+
 function vote_way_toggle() {
     unselect();    
     if(vote_way == "string") {
-        vote_way = "index";
-        ge("vote_way").innerText = "By index";
+        vote_way_to_index();
     } else if(vote_way == "index") {
-        vote_way = "string";
-        ge("vote_way").innerText = "By string";        
+        vote_way_to_string();
     } else { alert("Variable vote_way is wrong"); }
     update_suggest();
 }
@@ -170,8 +179,16 @@ function select_i(j) {
         got_index = j;
         unlocked = true;
         ge("vote_button").innerText = "Vote for index " + j;
+
+        vote_way_to_index();
+        ge("vote_for_input").value = got_index;
+        ge("suggest_for").innerText = topic_list[got_index][1];
     } else if(vote_way == "index") {
         got_index = j;
+        if( j >= topic_list.length || j<0 ){
+            ge("vote_button").hidden= true;
+            button.innerText = "(invalid index)"; return;
+        }
         unlocked = false;        
         ge("vote_button").innerText = "Unlock index " + j;
     } else { alert("Variable vote_way is wrong"); }
@@ -183,7 +200,7 @@ function vote_step() {
         run_vote();
     } else {
         if(vote_way != "index"){ alert("Unexpected state"); }
-        ge("vote_button").innerText = "Vote for index" + got_index;
+        ge("vote_button").innerText = "Vote for index " + got_index;
         unlocked = true;
     }
 }
@@ -191,7 +208,7 @@ function vote_step() {
 function update_suggest() {
     el = ge("suggest_for");
     el.hidden = false;    
-    input = ge("vote_for_input").value;    
+    input = ge("vote_for_input").value;
     if(vote_way == "string") {
         if( input.length < 4 ){ el.hidden = true; el.innerText = "(too short)"; return; }
         list = search_topic_list(input);
@@ -205,15 +222,15 @@ function update_suggest() {
             k = list[i];
             list_el = topic_list[k];
             html += "<tr><td>" + k + "</td><td>";
-            html += list_el[0] + "</td><td onclick=\"select_i(" + k + ")\">";
-            html += list_el[1] + "</td></tr>";
+            html += list_el[0] + "</td><td><button onclick=\"select_i(" + k + ")\">";
+            html += list_el[1] + "</button></td></tr>";
         }
         html += "</table>";
         el.innerHTML = html;
     } else if(vote_way == "index") {
         if(input == ""){ el.hidden = true; el.innerText = "(none found)"; return; }
         select_i(eth.toDecimal(input).valueOf());        
-        string = topicString(input);
+        string = topic_list[got_index][0] + " " + topic_list[got_index][1];
         if(string == null){
             el.innerText = "Not an integer, or integer too high/negative."; return;
         }
