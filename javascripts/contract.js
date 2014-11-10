@@ -25,7 +25,7 @@ function bitvoteAddr(without_alert) {
 
 function find_own_vote_address() {
     for(i=0 ; i < eth.keys.length ; i++) {
-        addr = eth.secretToAddress(eth.keys[i]);
+        var addr = eth.secretToAddress(eth.keys[i]);
         //Got it. TODO handle more than one. (and have warning about it)
         if( registeredState(addr) != "0x") { return addr; }
     }
@@ -45,7 +45,7 @@ var TopicSz = 224;
 
 // Asking stuff about topics.
 function topicN() {
-    i = eth.toDecimal(bvStateAt(TopicI)).valueOf();
+    var i = eth.toDecimal(bvStateAt(TopicI)).valueOf();
     return (i - TopicStartI)/TopicSz;
 }
 
@@ -56,9 +56,9 @@ function topicVotes(i) {  // Returns the amount of votes received.
 function topicString(i) {  // Returns the vote amount on a topic and the string.
     if(i<0 || i >= topicN()) { return null; }
     
-    k = TopicStartI + TopicSz*i + 0x20;
+    var k = TopicStartI + TopicSz*i + 0x20;
 
-    string = eth.toAscii(bvStateAt(k));
+    var string = eth.toAscii(bvStateAt(k));
     k += 0x20;
     while(k < TopicSz) {
         string += eth.toAscii(bvStateAt(k));
@@ -73,8 +73,8 @@ function registeredState(addr) {
 }
 
 function stateRegisteredTime(state) {
-    substr = state.substr(2,32);
-    for(i= substr.length -1 ; i>=0 ; i-=1) { if(substr[i]!='0'){ i +=1; break; } }
+    var substr = state.substr(2,32);
+    for(var i = substr.length -1 ; i>=0 ; i-=1) { if(substr[i]!='0'){ i +=1; break; } }
     return "0x" + substr.substr(0, i); // First part.
 }
 function stateVoteTime(addr) {

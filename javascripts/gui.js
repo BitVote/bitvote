@@ -47,9 +47,9 @@ function run_vote() {
 var topic_list = [];
 
 function search_topic_list(string) {
-    out = [];
-    for(i=0 ; i < topic_list.length ; i++) {
-        k = topic_list[i][1].search(string);
+    var out = [];
+    for(var i=0 ; i < topic_list.length ; i++) {
+        var k = topic_list[i][1].search(string);
         if(k!=-1){ out.push(i); }
     }
     return out;
@@ -74,7 +74,7 @@ function update() {
     if(one_per_id == "0x") { //None yet.
         ge("oneperid").innerText = "Not launched yet";
         
-        priv = got_privkey(onePerIDSet());
+        var priv = got_privkey(onePerIDSet());
         if( priv != null ) { //None yet, and we are the launchers.
             ge("creation").hidden = false;
             ge("launch_addr_input").hidden = false;            
@@ -99,7 +99,7 @@ function update() {
     ge("oneperid_set").innerText = addr_text(onePerIDSet());
 
     // Look up own registered accounts.
-    vote_addr = find_own_vote_address();
+    var vote_addr = find_own_vote_address();
     if( vote_addr == null ) {
         ge("message").hidden = false;
         ge("message").innerText = "Dont control any address with bitvote account.";
@@ -107,8 +107,8 @@ function update() {
         ge("oneperid_register").hidden = false;
         ge("account_status").hidden = true;
 
-        input = ge("oneperid_register_input").value;
-        note = ge("oneperid_register_note");
+        var input = ge("oneperid_register_input").value;
+        var note = ge("oneperid_register_note");
         note.innerText = "";
         note.className = "";
         if(input == "") {
@@ -129,7 +129,7 @@ function update() {
         timestamp = Math.floor((new Date()).getTime()/1000);
         ge("account_status").hidden = false;
 
-        state = registeredState(vote_addr);
+        var state = registeredState(vote_addr);
         
         registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
         moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
@@ -140,10 +140,10 @@ function update() {
         ge("power_time").innerText = timestamp - moving_time;
     }
     // Topic list stuff.
-    n = topicN();
-    list_str = "";
+    var n = topicN();
+    var list_str = "";
     ge("topic_count").innerText = n
-    topic_list = [];
+    var topic_list = [];
     for( j = 0 ; j < n ; j+=1 ) {
         votes = eth.toDecimal(topicVotes(j));
         string = topicString(j);
@@ -223,16 +223,16 @@ function vote_step() {
 function update_suggest() {
     el = ge("suggest_for");
     el.hidden = false;    
-    input = ge("vote_for_input").value;
+    var input = ge("vote_for_input").value;
     if(vote_way == "string") {
         if( input.length < 4 ){ el.hidden = true; el.innerText = "(too short)"; return; }
-        list = search_topic_list(input);
+        var list = search_topic_list(input);
         
         if( list.length == 1 ){ select_i(list[0]); }
         else{ unselect(); }
         
         if( list.length == 0 ){ el.hidden = true; el.innerText = "None found."; return; }
-        html = "<table>";
+        var html = "<table>";
         for( i = 0 ; i < list.length ; i++ ) {
             k = list[i];
             list_el = topic_list[k];
@@ -245,7 +245,7 @@ function update_suggest() {
     } else if(vote_way == "index") {
         if(input == ""){ el.hidden = true; el.innerText = "(none found)"; return; }
         select_i(eth.toDecimal(input).valueOf());        
-        string = topic_list[got_index][0] + " " + topic_list[got_index][1];
+        var string = topic_list[got_index][0] + " " + topic_list[got_index][1];
         if(string == null){
             el.innerText = "Not an integer, or integer too high/negative."; return;
         }
@@ -254,6 +254,6 @@ function update_suggest() {
 }
 
 function add_time(add) {
-    el = ge("vote_amount_input");
+    var el = ge("vote_amount_input");
     el.value = parseInt(el.value) + add;
 }

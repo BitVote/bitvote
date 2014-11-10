@@ -8,7 +8,7 @@
 var safety = true;
 
 function mayCreateNotLaunch(bitvote_fun, anyperid_fun) {
-    maybe_addr = bitvoteAddr();
+    var maybe_addr = bitvoteAddr();
     if(maybe_addr != '0x' && maybe_addr != null) {
         alert("Already created!");
         return;
@@ -19,7 +19,7 @@ function mayCreateNotLaunch(bitvote_fun, anyperid_fun) {
 // NOTE Non-serious of course, AnyPerID is a bad OnePerID, and user keeps
 //  total control over it.
 function setAnyPerID(anyperid_addr, fun) {
-    addr = bitvoteAddr();
+    var addr = bitvoteAddr();
     if(safety) {
         if(addr == "0x" || addr == null){ alert("No bitvote contract"); return; }
         if(anyperid_addr == "0x" || anyperid_addr == null){
@@ -27,8 +27,8 @@ function setAnyPerID(anyperid_addr, fun) {
         }
     }
     
-    launch_addr = onePerIDSet();
-    launch_key = got_privkey(launch_addr);
+    var launch_addr = onePerIDSet();
+    var launch_key = got_privkey(launch_addr);
     if(launch_key == null){ alert("You dont have the private key to launch it.");  return;}
 
     if(anyPerID_Initializer() != "0x") { //It doesnt know what the bitvote contract is yet!
@@ -39,16 +39,16 @@ function setAnyPerID(anyperid_addr, fun) {
     }
     
   // First argument the new anyperid, and second keeping full control to set later,
-    data = [anyperid_addr, launch_addr];
+    var data = [anyperid_addr, launch_addr];
     eth.transact({"from":launch_key, "to":addr, "value":0, "data":data}, fun);
 }
 
 function registerOnePerID(addr, fun) {
-    addr = hexify(addr);
+    var addr = hexify(addr);
     if(safety && addr == onePerIDSet()){
         alert("If the setter is the same as an bitvote account, the former cannot do anything. Prevented transaction."); return; }
     
-    priv = got_privkey(addr);
+    var priv = got_privkey(addr);
     if(priv == null){ alert("Dont have private key to do transaction."); return; }
     eth.transact({"from":priv, "to":onePerID(), "value":0}, fun);
 }
@@ -57,8 +57,8 @@ function createTopic(string, priv, fun) {
     if( safety && eth.secretToAddress(priv) == onePerIDSet() ){
         alert("The OnePerID setter cannot do anything outside role.\nLike creating topics.");
     }
-    data = [];
-    for( i = 0 ; i < string.length ; i+= 32 ){
+    var data = [];
+    for(var i = 0 ; i < string.length ; i+= 32 ){
         data.push(string.substr(i, i+32));
     }
     while( i/32 <= 3 ){ data.push(""); i+=32; }
@@ -69,11 +69,10 @@ function vote(vote_addr, index, amount) {
     if(safety && registeredState(vote_addr)=="0x") {
         alert("This doesnt look to be a registered account."); return;
     }
-    priv = got_privkey(vote_addr);
+    var priv = got_privkey(vote_addr);
     if(priv == null){ alert("You dont have the private key of address.");  return;}
 
-    data = [eth.fromAscii("vote"), "" + index, "" + amount];
-    alert(data);
+    var data = [eth.fromAscii("vote"), "" + index, "" + amount];
     eth.transact({"from":priv, "to":bitvoteAddr(), "value":0,
                   "data":data});
 }

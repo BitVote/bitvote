@@ -15,7 +15,7 @@ function transact_code(from, code, fun) { //This one is lazy.
 }
 
 function private_keys_dict(keys) {
-    have = {}
+    var have = {}
     for(i=0 ; i < keys.length ; i++) {
         have[eth.secretToAddress(keys[i])] = keys[i];
     }
