@@ -1,3 +1,10 @@
+//  Copyright (C) 10-11-2014 Jasper den Ouden.
+//
+//  This is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
 // Interfaces the API and the values/actions on the gui.
 
 function if_both_created(anyperid_addr) {
@@ -8,6 +15,7 @@ function if_both_created(anyperid_addr) {
 
 function set_from_input() {
     bitvote_addr = ge("bitvote_addr_input").value;
+    eth.watch({altered:{id:bitvote_addr}}).changed(update);
     if_both_created();
 }
 
@@ -137,7 +145,7 @@ function update() {
     ge("topic_count").innerText = n
     topic_list = [];
     for( j = 0 ; j < n ; j+=1 ) {
-        votes = eth.toDecimal(topicVotes(j)).valueOf();
+        votes = eth.toDecimal(topicVotes(j));
         string = topicString(j);
         topic_list.push([votes, string]);
         list_str += "<tr><td>" + votes;
