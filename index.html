@@ -19,8 +19,9 @@
 
     <!--Launching and viewing non-account, non-topic state-->
     <table><tr><td id="launch_state">Not created</td> <td>
-          <button id="creation" onclick="run_createNotLaunch()">Create</button>
-          <input id="launch_addr_input" oninput="update();" type="text">
+          <button id="creation" onclick="run_createNotLaunch();">Create</button>
+          <input id="set_oneperid_addr_input" oninput="update();" type="text">
+          <span id="set_oneperid_addr_input_note"></span>
       </td></tr>
       <tr><td>Bitvote addr:</td><td><input type="text" id="bitvote_addr_input" oninput="set_from_input();"></td></tr>
       <tr><td>OnePerID</td> <td id="oneperid">-</td></tr>
@@ -46,13 +47,17 @@
       <table><tr><td><img src="images/bitvote_logo_smaller.png" alt="logo" /></td><td>
       <table>
          <tr>
-          <td class="note">add</td> <td>CurrentTime:</td>      <td id="current_time"></td></tr>
+           <td class="note">add</td> <td>CurrentTime:</td>
+           <td id="current_time"></td></tr>
         <tr style="border-bottom: 2px">
-          <td class="note">minus</td> <td>Registered Time:</td> <td id="register_time"></td></tr>
+          <td class="note">minus</td> <td>Registered Time:</td>
+          <td id="register_time"></td></tr>
         <tr>
-          <td class="note">minus</td> <td>Spent Vote-Time:</td>    <td id="spent_time"></td></tr>
+          <td class="note">minus</td> <td>Spent Vote-Time:</td>
+          <td id="spent_time"></td></tr>
         <tr>
-          <td class="note">equals</td> <td>Available Vote-Time:</td>    <td id="power_time"></td></tr>
+          <td class="note">equals</td> <td>Available Vote-Time:</td>
+          <td id="power_time"></td></tr>
       </table></td></tr></table>
       <!-- Voting interface -->
       <table>
@@ -95,6 +100,7 @@
     
     <script src="js/common.js"></script>
     <script src="js/contract.js"></script>
+    <script src="js/anyperid.js"></script>    
     <script src="js/do.js"></script>
     <script src="build/bitvote_creator.js"></script>
     <script src="js/gui.js"></script>

@@ -7,9 +7,13 @@
 
 // Interfaces the API and the values/actions on the gui.
 
-function if_both_created(anyperid_addr) {
+function if_both_created(anyperid_addr, do_launch) {
     if(bitvote_addr != null)  { ge("bitvote_addr_input").value = bitvote_addr; }
     if(anyperid_addr != null) { ge("launch_addr_input").value = anyperid_addr; }
+
+    if(do_launch!=null && do_launch && bitvote_addr!=null && anyperid_addr!=null) {
+        setAnyPerID(hexify(anyperid_addr, update));
+    }
     update();
 }
 
@@ -26,11 +30,11 @@ function run_createNotLaunch() {
 }
 
 function run_launch() {
-    setAnyPerID(hexify(ge("launch_addr_input").value), update);
+    setAnyPerID(hexify(ge("set_oneperid_addr_input").value), update);
 }
 
 function run_register() {
-    registerOnePerID(ge("oneperid_register_input").value, update);
+    registerAtOnePerID(ge("oneperid_register_input").value, update);
 }
 
 function run_createTopic() {
@@ -63,7 +67,8 @@ function update() {
         ge("launch_state").innerText = "Not created";
         ge("creation").innerText = "Create";
         ge("creation").onclick = run_createNotLaunch;
-        ge("launch_addr_input").hidden = true;
+        ge("set_oneperid_addr_input").hidden = true;
+        ge("set_oneperid_addr_input_note").hidden = true;
 
         ge("message").hidden = false;
         ge("message").innerText = "No bitvote contract determined";
@@ -73,21 +78,30 @@ function update() {
     one_per_id = onePerID();
     if(one_per_id == "0x") { //None yet.
         ge("oneperid").innerText = "Not launched yet";
-        
+
+        var setter = ge("set_oneperid_addr_input");
+        var note   = ge("set_oneperid_addr_input_note");
         var priv = got_privkey(onePerIDSet());
         if( priv != null ) { //None yet, and we are the launchers.
             ge("creation").hidden = false;
-            ge("launch_addr_input").hidden = false;            
+            setter.hidden = false;
+            note.hidden = false;
             ge("launch_state").innerText = "Not launched, have launching key.";
-            if(ge("launch_addr_input").value != "") {
-                ge("creation").innerText = "Launch"; 
+            if(setter.value != "") {
+                ge("creation").innerText = "Launch";
+                if( eth.stateAt(hexify(setter.value), "0x00") != onePerIDSet() ){
+                    note.innerText = "0x00 doesnt look like launcher address.";
+                } else if( eth.stateAt(hexify(setter.value), "0x20") != "0x" ){
+                    note.innerText = "0x20 has stuff?";
+                } else{ note.innerText = ""; }
             } else {
                 ge("creation").innerHTML = "Launch <span class=\"warning\">No suggested new address</span>";
             }
             ge("creation").onclick =run_launch;;
         } else {
             ge("creation").hidden = true;
-            ge("launch_addr_input").hidden = true;        
+            setter.hidden = true;
+            note.hidden = true;
             ge("launch_state").innerText = "Created, not launched.";
             ge("creation").onclick = null;
         }
@@ -130,7 +144,7 @@ function update() {
         ge("account_status").hidden = false;
 
         var state = registeredState(vote_addr);
-        
+
         var registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
         var moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
 
@@ -149,6 +163,7 @@ function update() {
         string = topicString(j);
         topic_list.push([votes, string]);
         list_str += "<tr><td>" + votes;
+        // TODO cleaning up string?! Or never interpreting as HTML in first place.
         list_str += "</td><td>" + string + "</td></tr>";
     }
     ge("topic_list").innerHTML = list_str;

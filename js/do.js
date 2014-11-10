@@ -18,6 +18,8 @@ function mayCreateNotLaunch(bitvote_fun, anyperid_fun) {
 
 // NOTE Non-serious of course, AnyPerID is a bad OnePerID, and user keeps
 //  total control over it.
+
+// Tells the bitvote contract which the OnePerID contract is.
 function setAnyPerID(anyperid_addr, fun) {
     var addr = bitvoteAddr();
     if(safety) {
@@ -26,16 +28,15 @@ function setAnyPerID(anyperid_addr, fun) {
             alert("No prospective anyperid contract."); return; 
         }
     }
-    
     var launch_addr = onePerIDSet();
     var launch_key = got_privkey(launch_addr);
     if(launch_key == null){ alert("You dont have the private key to launch it.");  return;}
 
-    if(anyPerID_Initializer() != "0x") { //It doesnt know what the bitvote contract is yet!
-        if( anyPerID_Bitvote() != "0x" ){ alert("Inconsistent state AnyPerID!"); }
-        eth.transact({"from":launch_key, "to":OnePerID(), "value":0, "data":[addr]});
-    } else if(anyPerID_Bitvote() != addr) {
-        alert("AnyPerID does not agree on which is Bitvote!");
+    if(eth.stateAt(anyperid_addr, "0x00") != "0x") {
+        if( eth.stateAt(anyperid_addr, "0x20") != "0x" ){
+            alert("Inconsistent state AnyPerID!"); return;
+        }
+        eth.transact({"from":launch_key, "to":anyperid_addr, "value":0, "data":[addr]});
     }
     
   // First argument the new anyperid, and second keeping full control to set later,
@@ -43,7 +44,7 @@ function setAnyPerID(anyperid_addr, fun) {
     eth.transact({"from":launch_key, "to":addr, "value":0, "data":data}, fun);
 }
 
-function registerOnePerID(addr, fun) {
+function registerAtOnePerID(addr, fun) {
     var addr = hexify(addr);
     if(safety && addr == onePerIDSet()){
         alert("If the setter is the same as an bitvote account, the former cannot do anything. Prevented transaction."); return; }

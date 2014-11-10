@@ -6,8 +6,8 @@
 // (at your option) any later version.
 
 function anyPerID_Initializer() {
-    return eth.storageAt(onePerID(), "0x00");
+    return eth.stateAt(onePerID(), "0x00");
 }
 function anyPerID_Bitvote() {
-    return eth.storageAt(onePerID(), "0x20");
+    return eth.stateAt(onePerID(), "0x20");
 }
