@@ -77,7 +77,6 @@ function stateRegisteredTime(state) {
     for(var i = substr.length -1 ; i>=0 ; i-=1) { if(substr[i]!='0'){ i +=1; break; } }
     return "0x" + substr.substr(0, i); // First part.
 }
-function stateVoteTime(addr) {
-    if(addr == null) { addr = myAddr() }
+function stateVoteTime(state) {
     return "0x" + state.substr(34); // Last part.
 }

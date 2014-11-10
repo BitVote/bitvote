@@ -126,13 +126,13 @@ function update() {
         ge("oneperid_register").hidden = true;
         //TODO might want to use the actual timestamp from the block.
         // (eth.block(eth.number) doesnt work for me yet)
-        timestamp = Math.floor((new Date()).getTime()/1000);
+        var timestamp = Math.floor((new Date()).getTime()/1000);
         ge("account_status").hidden = false;
 
         var state = registeredState(vote_addr);
         
-        registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
-        moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
+        var registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
+        var moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
 
         ge("current_time").innerText = timestamp; //"todo need time stamp";
         ge("register_time").innerText = registered_time;
