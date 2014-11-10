@@ -73,7 +73,6 @@ function vote(vote_addr, index, amount) {
     var priv = got_privkey(vote_addr);
     if(priv == null){ alert("You dont have the private key of address.");  return;}
 
-    var data = [eth.fromAscii("vote"), "" + index, "" + amount];
     eth.transact({"from":priv, "to":bitvoteAddr(), "value":0,
-                  "data":data});
+                  "data":[eth.fromAscii("vote"), index, amount]});
 }

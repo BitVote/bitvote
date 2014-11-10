@@ -63,13 +63,14 @@
       <table>
         <tr><td>Vote:</td>
           <td>From:</td><td>
-            <input type="text" id="vote_from_addr_input">
+            <input type="text" id="vote_from_addr_input" oninput="update_from();">
+            <span id="vote_from_addr_input_note"></span>
         </td></tr>
 
         <tr><td></td>
           <td>For:<button id="vote_way" onclick="vote_way_toggle();">By string</button></td>
           <td>
-            <input type="text" id="vote_for_input"oninput="update();" onchange="update_suggest();">
+            <input type="text" id="vote_for_input" oninput="update_suggest();">
             <p id="suggest_for" hidden="true"></p>
         </td></tr>
         <tr><td></td><td>Amount:</td>

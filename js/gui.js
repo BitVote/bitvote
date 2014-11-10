@@ -170,8 +170,19 @@ function update() {
 
     update_suggest();
 
-    if( ge("vote_from_addr_input").value == "" ){
-        ge("vote_from_addr_input").value = find_own_vote_address();
+    update_from();
+}
+
+function update_from() {
+    var vote_from_el = ge("vote_from_addr_input");
+    var note = ge("vote_from_addr_input_note");
+    note.innerText = "";
+    var hex = hexify(vote_from_el.value);
+    if( vote_from_el.value == "" ){
+        vote_from_el.value = find_own_vote_address();
+    } else if( hex == onePerIDSet()) {
+        note.innerText = "OnePerID setter cannot vote";
+        note.className = "warn";
     }
 }
 
