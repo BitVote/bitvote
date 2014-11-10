@@ -244,8 +244,7 @@ function update_suggest() {
         if( input.length < 4 ){ el.hidden = true; el.innerText = "(too short)"; return; }
         var list = search_topic_list(input);
         
-        if( list.length == 1 ){ select_i(list[0]); }
-        else{ unselect(); }
+        unselect();
         
         if( list.length == 0 ){ el.hidden = true; el.innerText = "None found."; return; }
         var html = "<table>";
@@ -260,16 +259,20 @@ function update_suggest() {
         el.innerHTML = html;
     } else if(vote_way == "index") {
         if(input == ""){ el.hidden = true; el.innerText = "(none found)"; return; }
-        select_i(eth.toDecimal(input).valueOf());        
-        var string = topic_list[got_index][0] + " " + topic_list[got_index][1];
-        if(string == null){
+        var i = parseInt(input);
+        if( i.toString() == "NaN" ){ vote_way_to_string(); return; }
+        select_i(i);
+        if(i<0 || i > topic_list.length) {
             el.innerText = "Not an integer, or integer too high/negative."; return;
+        } else {
+            el.innerText = topic_list[i];
         }
-        el.innerText = string;
     } else { alert("Variable vote_way is wrong"); }
 }
 
 function add_time(add) {
     var el = ge("vote_amount_input");
-    el.value = parseInt(el.value) + add;
+    var cur = parseInt(el.value);
+    if( cur.toString() == "NaN" ){ cur = 0; }
+    el.value = cur + add;
 }
