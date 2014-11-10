@@ -143,7 +143,7 @@ function update() {
     var n = topicN();
     var list_str = "";
     ge("topic_count").innerText = n
-    var topic_list = [];
+    topic_list = [];
     for( j = 0 ; j < n ; j+=1 ) {
         votes = eth.toDecimal(topicVotes(j));
         string = topicString(j);
@@ -189,11 +189,12 @@ var unlocked = false;
 function unselect(){ got_index = null; ge("vote_button").hidden = true; }
 
 function select_i(j) {
-    ge("vote_button").hidden= false; 
+    var button = ge("vote_button");
+    button.hidden= false;
     if(vote_way == "string") {
         got_index = j;
         unlocked = true;
-        ge("vote_button").innerText = "Vote for index " + j;
+        button.innerText = "Vote for index " + j;
 
         vote_way_to_index();
         ge("vote_for_input").value = got_index;
@@ -201,11 +202,11 @@ function select_i(j) {
     } else if(vote_way == "index") {
         got_index = j;
         if( j >= topic_list.length || j<0 ){
-            ge("vote_button").hidden= true;
+            button.hidden= true;
             button.innerText = "(invalid index)"; return;
         }
         unlocked = false;        
-        ge("vote_button").innerText = "Unlock index " + j;
+        button.innerText = "Unlock index " + j;
     } else { alert("Variable vote_way is wrong"); }
 }
 
