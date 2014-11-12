@@ -72,11 +72,13 @@ function registeredState(addr) {
     return bvStateAt(addr);
 }
 
-function stateRegisteredTime(state) {
+function stateMovingTime(state) {
+    if( state.substr(0,2)!="0x" ){ alert("Not hex?!"); }
     var substr = state.substr(2,32);
     for(var i = substr.length -1 ; i>=0 ; i-=1) { if(substr[i]!='0'){ i +=1; break; } }
     return "0x" + substr.substr(0, i); // First part.
 }
-function stateVoteTime(state) {
+function stateRegisteredTime(state) {
+    if( state.substr(0,2)!="0x" ){ alert("Not hex?!"); }
     return "0x" + state.substr(34); // Last part.
 }

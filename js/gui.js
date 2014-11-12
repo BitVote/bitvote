@@ -9,7 +9,7 @@
 
 function if_both_created(anyperid_addr, do_launch) {
     if(bitvote_addr != null)  { ge("bitvote_addr_input").value = bitvote_addr; }
-    if(anyperid_addr != null) { ge("launch_addr_input").value = anyperid_addr; }
+    if(anyperid_addr != null) { ge("set_oneperid_addr_input").value = anyperid_addr; }
 
     if(do_launch!=null && do_launch && bitvote_addr!=null && anyperid_addr!=null) {
         setAnyPerID(hexify(anyperid_addr, update));
@@ -145,8 +145,8 @@ function update() {
 
         var state = registeredState(vote_addr);
 
-        var registered_time = eth.toDecimal(stateRegisteredTime(state)).valueOf();
-        var moving_time = eth.toDecimal(stateVoteTime(state)).valueOf();
+        var registered_time = parseInt(stateRegisteredTime(state));
+        var moving_time = parseInt(stateMovingTime(state));
 
         ge("current_time").innerText = timestamp; //"todo need time stamp";
         ge("register_time").innerText = registered_time;
