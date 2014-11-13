@@ -15,17 +15,15 @@
         <![endif]-->
   </head>
   <body>
-    <p>Note: **WIP**.</p>
+    <p>&rarr;<a href="panel.html">Control panel</a></p>
 
-    <!--Launching and viewing non-account, non-topic state-->
-    <table><tr><td id="launch_state">Not created</td> <td>
-          <button id="creation" onclick="run_createNotLaunch();">Create</button>
-          <input id="set_oneperid_addr_input" oninput="update();" type="text">
-          <span id="set_oneperid_addr_input_note"></span>
-      </td></tr>
-      <tr><td>Bitvote addr:</td><td><input type="text" id="bitvote_addr_input" oninput="set_from_input();"></td></tr>
-      <tr><td>OnePerID</td> <td id="oneperid">-</td></tr>
-      <tr><td>Changer</td> <td id="oneperid_set">-</td></tr>
+    <!--Viewing non-account, non-topic state-->
+    <table>
+      <tr><td>Bitvote addr:</td><td>
+          <input type="text" id="bitvote_addr_input" oninput="set_from_input();"></td></tr>
+      <tr><td>OnePerID</td>  <td id="oneperid">-</td></tr>
+      <tr><td>Changer</td>   <td id="oneperid_set">-</td></tr>
+      <tr><td>Puppeteer</td> <td id="puppeteer">-</td></tr>
     </table>
 
     <!--Registering with the OnePerID-->

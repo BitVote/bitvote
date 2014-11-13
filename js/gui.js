@@ -29,10 +29,6 @@ function run_createNotLaunch() {
                        function(addr){ if_both_created(addr); });
 }
 
-function run_launch() {
-    setAnyPerID(hexify(ge("set_oneperid_addr_input").value), update);
-}
-
 function run_register() {
     registerAtOnePerID(ge("oneperid_register_input").value, update);
 }
@@ -59,59 +55,28 @@ function search_topic_list(string) {
     return out;
 }
 
-// TODO before updating, check if anything changed, needing update.
-function update() {
+function update_info_panel() {
     // No contract in existance yet.
     if(bitvoteAddr(true) == null || bitvoteAddr(true) == "0x") {
-        ge("creation").hidden = false;
-        ge("launch_state").innerText = "Not created";
-        ge("creation").innerText = "Create";
-        ge("creation").onclick = run_createNotLaunch;
-        ge("set_oneperid_addr_input").hidden = true;
-        ge("set_oneperid_addr_input_note").hidden = true;
-
         ge("message").hidden = false;
-        ge("message").innerText = "No bitvote contract determined";
+        ge("message").innerText = "No bitvote contract determined.";
         return;
     }
     // Display who the OnePerID is.
-    one_per_id = onePerID();
-    if(one_per_id == "0x") { //None yet.
+    if(onePerID() == "0x") { //None yet.
         ge("oneperid").innerText = "Not launched yet";
-
-        var setter = ge("set_oneperid_addr_input");
-        var note   = ge("set_oneperid_addr_input_note");
-        var priv = got_privkey(onePerIDSet());
-        if( priv != null ) { //None yet, and we are the launchers.
-            ge("creation").hidden = false;
-            setter.hidden = false;
-            note.hidden = false;
-            ge("launch_state").innerText = "Not launched, have launching key.";
-            if(setter.value != "") {
-                ge("creation").innerText = "Launch";
-                if( eth.stateAt(hexify(setter.value), "0x00") != onePerIDSet() ){
-                    note.innerText = "0x00 doesnt look like launcher address.";
-                } else if( eth.stateAt(hexify(setter.value), "0x20") != "0x" ){
-                    note.innerText = "0x20 has stuff?";
-                } else{ note.innerText = ""; }
-            } else {
-                ge("creation").innerHTML = "Launch <span class=\"warning\">No suggested new address</span>";
-            }
-            ge("creation").onclick =run_launch;;
-        } else {
-            ge("creation").hidden = true;
-            setter.hidden = true;
-            note.hidden = true;
-            ge("launch_state").innerText = "Created, not launched.";
-            ge("creation").onclick = null;
-        }
+        ge("puppeteer").innerText = "-";
     } else {
-        ge("oneperid").innerText = addr_text(one_per_id);
-        ge("launch_state").innerText = "Launched";
-        ge("creation").hidden = true;
+        ge("oneperid").innerText = addr_text(onePerID());
+        ge("puppeteer").innerText = addr_text(puppeteer());
     }
-    ge("oneperid_set").innerText = addr_text(onePerIDSet());
+    ge("oneperid_set").innerText = addr_text(onePerIDSet());    
+}
 
+// TODO before updating, check if anything changed, needing update.
+function update() {
+    update_info_panel();
+    
     // Look up own registered accounts.
     var vote_addr = find_own_vote_address();
     if( vote_addr == null ) {

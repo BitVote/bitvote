@@ -23,21 +23,13 @@ function bitvoteAddr(without_alert) {
     return hexify(bitvote_addr);
 }
 
-function find_own_vote_address() {
-    for(i=0 ; i < eth.keys.length ; i++) {
-        var addr = eth.secretToAddress(eth.keys[i]);
-        //Got it. TODO handle more than one. (and have warning about it)
-        if( registeredState(addr) != "0x") { return addr; }
-    }
-    return null;
-}
-
 // Access storage elements from bitvote in particular.
 function bvStateAt(_s) { return eth.stateAt(bitvoteAddr(), _s); }
 
 // Which is the One Per ID according to bitvote.
 function onePerID(){ return bvStateAt("0x00"); }
 function onePerIDSet(){ return bvStateAt("0x20"); }
+function puppeteer(){ return bvStateAt("0x60"); }
 
 var TopicI = 0x40;
 var TopicStartI = 0x60;
@@ -81,4 +73,15 @@ function stateMovingTime(state) {
 function stateRegisteredTime(state) {
     if( state.substr(0,2)!="0x" ){ alert("Not hex?!"); }
     return "0x" + state.substr(34); // Last part.
+}
+
+// If you have a voting address.
+// TODO handle more than one. Of course this is undesirable.
+function find_own_vote_address() {
+    for(var i=0 ; i < eth.keys.length ; i++) {
+        var addr = eth.secretToAddress(eth.keys[i]);
+        //Got it.
+        if( registeredState(addr) != "0x") { return addr; }
+    }
+    return null;
 }

@@ -1,4 +1,4 @@
-//  Copyright (C) 10-11-2014 Jasper den Ouden.
+//  Copyright (C) 13-11-2014 Jasper den Ouden.
 //
 //  This is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published
@@ -12,22 +12,24 @@ shared:
     OnePerID = 0x00
     OnePerIDSet = 0x20
     TopicI = 0x40
+    Puppeteer = 0x60
 // 224 == 32*7, it is a lot, in the future likely 32, and magnet/swarm/contract links.
     TopicSz = 224
     
-    TopicStartI = 0x60
+    TopicStartI = 0x80
     
     HALFWAY = 340282366920938463463374607431768211456
     LARGE = 1152921504606846976
 
     NAMEREG = 0x50441127ea5b9dfd835a9aba4e1dc9c1257b58ca
 init:
-    contract.storage[OnePerID] = 0              // One per ID. (initially no one)
-    contract.storage[OnePerIDSet] = msg.sender  // One per ID setter.
+    contract.storage[OnePerID] = 0              // One per ID. (initially none)
+    contract.storage[OnePerIDSet] = msg.sender  // One per ID setter. (should be contract)
     contract.storage[TopicI] = TopicStartI
+    contract.storage[Puppeteer] = 0             // (should be contract)
 
-    //args = ["register", "bitvote"] // Ask to register in the namereg.
-    //msg(tx.gas-100, NAMEREG, 0, args, 2)  // TODO need facilities.
+    args = ["register", "bitvote"] // Initial registering.(puppeteer may do other)
+    msg(tx.gas-100, NAMEREG, 0, args, 2)
 code:
     // One per ID speaking. (it controls registering and deregistering)
     // NOTE: registering OnePerID(setter), those two addresses will only be able
@@ -68,11 +70,23 @@ code:
 
 // One per ID changer speaking. //TODO prepend the name of the command.
     if msg.sender == contract.storage[OnePerIDSet]:
-        if msg.datasize != 2:
+        if msg.datasize != 3:
             return("OnePerIDSet bad")
         contract.storage[OnePerID]    = msg.data[0]
         contract.storage[OnePerIDSet] = msg.data[1]
+        contract.storage[Puppeteer]   = msg.data[2]
         return("changed!")
+
+// Puppeteer speaking.
+    if msg.sender == contract.storage[Puppeteer]:
+        if msg.datasize == 0:
+            return("Puppeteer cant do nothing")
+        i = 1
+        args = array(msg.datasize-1)
+        while i < msg.datasize:
+            args[i-1] = msg.data[i]            
+            i = i + 1
+        return msg(tx.gas-100, msg.data[0], msg.value, args, msg.datasize-1)
 
 // Anyone speaking.
     if msg.datasize == 1:
