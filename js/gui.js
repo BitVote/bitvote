@@ -48,14 +48,15 @@ function update_info_panel() {
         return;
     }
     // Display who the OnePerID is.
-    if(onePerID() == "0x") { //None yet.
-        ge("oneperid").innerText = "Not launched yet";
+    if(bitvoteAddr() == null ) { //None yet.
+        ge("oneperid").innerText = "-";
+        ge("oneperid_set").innerText = "-";
         ge("puppeteer").innerText = "-";
     } else {
-        ge("oneperid").innerText = addr_text(onePerID());
-        ge("puppeteer").innerText = addr_text(puppeteer());
+        ge("oneperid").innerHTML = addr_html(onePerID());
+        ge("oneperid_set").innerHTML = addr_html(onePerIDSet());
+        ge("puppeteer").innerHTML = addr_html(puppeteer());
     }
-    ge("oneperid_set").innerText = addr_text(onePerIDSet());    
 }
 
 // TODO before updating, check if anything changed, needing update.

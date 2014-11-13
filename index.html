@@ -6,7 +6,8 @@
     <title>BitVote Demo</title>
     
     <link rel="stylesheet" href="css/note.css">
-    <link rel="stylesheet" href="css/style.css">    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/addr.css">
     
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     
@@ -20,7 +21,8 @@
     <!--Viewing non-account, non-topic state-->
     <table>
       <tr><td>Bitvote addr:</td><td>
-          <input type="text" id="bitvote_addr_input" oninput="set_from_input();"></td></tr>
+          <input type="text" id="bitvote_addr_input" oninput="set_from_input();"></td>
+      </tr>
       <tr><td>OnePerID</td>  <td id="oneperid">-</td></tr>
       <tr><td>Changer</td>   <td id="oneperid_set">-</td></tr>
       <tr><td>Puppeteer</td> <td id="puppeteer">-</td></tr>
@@ -98,6 +100,7 @@
     </p>
     
     <script src="js/common.js"></script>
+    <script src="js/common-gui.js"></script>
     <script src="js/contract.js"></script>
     <script src="js/anyperid.js"></script>    
     <script src="js/do.js"></script>

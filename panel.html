@@ -6,7 +6,8 @@
     <title>BitVote Demo</title>
     
     <link rel="stylesheet" href="css/note.css">
-    <link rel="stylesheet" href="css/style.css">    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/addr.css">    
     
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     
@@ -29,10 +30,10 @@
     
     <!--Launching and viewing non-account, non-topic state-->
     <h4>Info and setting things(if allowed)</h4>
-    <button onclick="update_panel();">Update</button>
     <table>
       <tr><td>Bitvote addr:</td>
         <td><input type="text" id="bitvote_addr_input" oninput="bitvote_addr_change();"></td>
+        <td><button id="bitvote_create" hidden="true" onclick="run_createNotLaunch();">Create</button></td>
         <td id="bitvote_addr_note"></td>
       </tr>
       <tr><td>OnePerID:</td> <td id="oneperid">-</td>
@@ -54,9 +55,9 @@
     decentralized vote.)
     
     TODO passing along commands.
-
     
     <script src="js/common.js"></script>
+    <script src="js/common-gui.js"></script>    
     <script src="js/contract.js"></script>
     <script src="js/anyperid.js"></script>    
     <script src="js/do.js"></script>

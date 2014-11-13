@@ -6,7 +6,7 @@
 // (at your option) any later version.
 
 //Helps showing addresses in html.
-function html_addr(addr) {
+function addr_html(addr) {
     if( addr.substr(0,2) != "0x" ){ alert("Just accepting hex."); }
     var html = "<span class=\"addr_front\">" + addr.substr(2,10) + "</span>";
     html += "<span class=\"addr_aft\">" + addr.substr(10) + "</span>";
