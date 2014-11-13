@@ -31,7 +31,7 @@ function bvStateAt(_s) { return eth.stateAt(bitvoteAddr(), _s); }
 
 // Which is the One Per ID according to bitvote.
 function onePerID(){ return bvStateAt("0x00"); }
-function onePerIDSet(){ return bvStateAt("0x20"); }
+function changer(){ return bvStateAt("0x20"); }
 function puppeteer(){ return bvStateAt("0x60"); }
 
 var TopicI = 0x40;

@@ -48,11 +48,11 @@ function update_info_panel() {
         ge("message").innerText = "No bitvote contract determined.";
         
         ge("oneperid").innerText = "-";
-        ge("oneperid_set").innerText = "-";
+        ge("changer").innerText = "-";
         ge("puppeteer").innerText = "-";
     } else {
         ge("oneperid").innerHTML = addr_html(onePerID());
-        ge("oneperid_set").innerHTML = addr_html(onePerIDSet());
+        ge("changer").innerHTML = addr_html(changer());
         ge("puppeteer").innerHTML = addr_html(puppeteer());
     }
 }
@@ -78,7 +78,7 @@ function update() {
         } else if(got_privkey(hexify(input)) == null) {
             note.innerText = "dont have this private key";
             note.className = "warn";
-        } else if( hexify(input) == onePerIDSet() ) {
+        } else if( hexify(input) == changer() ) {
             note.innerText = "That address already sets the OnePerID";
             note.className = "warn";
         }
@@ -129,7 +129,7 @@ function update_from() {
     var hex = hexify(vote_from_el.value);
     if( vote_from_el.value == "" ){
         vote_from_el.value = find_own_vote_address();
-    } else if( hex == onePerIDSet()) {
+    } else if( hex == changer()) {
         note.innerText = "OnePerID setter cannot vote";
         note.className = "warn";
     }

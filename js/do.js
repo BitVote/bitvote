@@ -44,7 +44,7 @@ function change(anyperid_addr, anyperid_set_addr, puppeteer_addr, fun) {
 
 function registerAtOnePerID(addr, fun) {
     var addr = hexify(addr);
-    if(safety && addr == onePerIDSet()){
+    if(safety && addr == changer()){
         alert("If the setter is the same as an bitvote account, the former cannot do anything. Prevented transaction."); return; }
     
     var priv = got_privkey(addr);
@@ -53,7 +53,7 @@ function registerAtOnePerID(addr, fun) {
 }
 
 function createTopic(string, priv, fun) {
-    if( safety && eth.secretToAddress(priv) == onePerIDSet() ){
+    if( safety && eth.secretToAddress(priv) == changer() ){
         alert("The OnePerID setter cannot do anything outside role.\nLike creating topics.");
     }
     var data = [];
@@ -71,6 +71,6 @@ function vote(vote_addr, index, amount) {
     var priv = got_privkey(vote_addr);
     if(priv == null){ alert("You dont have the private key of address.");  return;}
 
-    eth.transact({"from":priv, "to":bitvoteAddr(), "value":0,
-                  "data":[eth.fromAscii("vote"), index, amount]});
+    var data = [eth.fromAscii("vote"), "0x" + index.toString(16), "0x" + amount.toString(16)];
+    eth.transact({"from":priv, "to":bitvoteAddr(), "value":0, "data":data});
 }

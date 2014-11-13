@@ -47,23 +47,23 @@ function update_mod_panel() {
         ge("bitvote_create").hidden = false;
     }
     
-    if(force_show_modification_panel || got_privkey(onePerIDSet())) {
+    if(force_show_modification_panel || got_privkey(changer())) {
         ge("oneperid_input").hidden = false;
-        ge("oneperid_set_input").hidden = false;
+        ge("changer_input").hidden = false;
         ge("puppeteer_input").hidden = false;
 
-        _update_mod_note(ge("oneperid_input"), onePerID(), ge("oneperid_note"));
-        _update_mod_note(ge("oneperid_set_input"), onePerIDSet(), ge("oneperid_set_note"));
+        _update_mod_note(ge("oneperid_input"),  onePerID(),  ge("oneperid_note"));
+        _update_mod_note(ge("changer_input"),   changer(),   ge("changer_note"));
         _update_mod_note(ge("puppeteer_input"), puppeteer(), ge("puppeteer_note"));
 
         ge("lock_toggle").hidden = false;
     } else {
-        ge("oneperid_input").hidden = true;
-        ge("oneperid_set_input").hidden = true;
+        ge("oneperid_input").hidden  = true;
+        ge("changer_input").hidden   = true;
         ge("puppeteer_input").hidden = true;
         
-        ge("oneperid_note").hidden = true;
-        ge("oneperid_set_note").hidden = true;
+        ge("oneperid_note").hidden  = true;
+        ge("changer_note").hidden   = true;
         ge("puppeteer_note").hidden = true;
         
         ge("lock_toggle").hidden = true;
@@ -101,7 +101,7 @@ function run_change() {
     } else if( ge("run_change").innerText == "Change" ) {
         //
         change(hexify(ge("oneperid_input").value),
-               hexify(ge("oneperid_set_input").value),
+               hexify(ge("changer_input").value),
                hexify(ge("puppeteer_input").value), update)
     }
 }
