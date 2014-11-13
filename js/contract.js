@@ -20,6 +20,9 @@ function bitvoteAddr(without_alert) {
        bitvote_addr==null){
         alert("no addr: " + bitvote_addr + "\n" + without_alert);
     }
+    if( bitvote_addr == null ){ return null; }
+    bitvote_addr = hexify(bitvote_addr);
+    if( bitvote_addr == "0x" ){ return null; }
     return hexify(bitvote_addr);
 }
 

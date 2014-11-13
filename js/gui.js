@@ -7,28 +7,13 @@
 
 // Interfaces the API and the values/actions on the gui.
 
-function if_both_created(anyperid_addr, do_launch) {
-    if(bitvote_addr != null)  { ge("bitvote_addr_input").value = bitvote_addr; }
-    if(anyperid_addr != null) { ge("set_oneperid_addr_input").value = anyperid_addr; }
-
-    if(do_launch!=null && do_launch && bitvote_addr!=null && anyperid_addr!=null) {
-        setAnyPerID(hexify(anyperid_addr, update));
-    }
-    update();
-}
-
 function set_from_input() {
     bitvote_addr = ge("bitvote_addr_input").value;
     eth.watch({altered:{id:bitvote_addr}}).changed(update);
-    if_both_created();
+    update();
 }
 
 // `run_...` makes transactions.
-function run_createNotLaunch() {
-    mayCreateNotLaunch(function(addr){ bitvote_addr = addr;  if_both_created(); },
-                       function(addr){ if_both_created(addr); });
-}
-
 function run_register() {
     registerAtOnePerID(ge("oneperid_register_input").value, update);
 }

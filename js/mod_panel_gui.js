@@ -11,7 +11,8 @@ function update_panel() {
 }
 
 function bitvote_addr_change() {
-    set_from_input();
+    bitvote_addr = ge("bitvote_addr_input").value;
+    eth.watch({altered:{id:bitvote_addr}}).changed(update);
     update_panel();    
 }
 
@@ -35,6 +36,13 @@ function _update_mod_note(set_el, older, note_el) {
 
 var force_show_modification_panel = false;
 function update_mod_panel() {
+
+    ge("bitvote_create").hidden = true;
+    
+    if( ge("bitvote_addr_input").value == "" ){
+        ge("bitvote_create").hidden = false;
+    }
+    
     if(force_show_modification_panel || got_privkey(onePerIDSet())) {
         ge("oneperid_input").hidden = false;
         ge("oneperid_set_input").hidden = false;
@@ -84,4 +92,12 @@ function run_change() {
                hexify(ge("oneperid_set_input").value),
                hexify(ge("puppeteer_input").value), update)
     }
+}
+
+function run_createNotLaunch() {
+    if(safety) {
+        if( ge("bitvote_create").hidden ){ alert("Hidden yet clicked?"); return; }
+        if( bitvoteAddr() != null ){ alert("Already have one?"); return; }
+    }
+    mayCreateNotLaunch(function(addr){ bitvote_addr = addr; update_panel(); }, update_panel);
 }
