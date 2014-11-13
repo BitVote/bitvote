@@ -21,17 +21,20 @@ function _update_mod_note(set_el, older, note_el) {
     var account = hexify(set_el.value);
     var am_it = (got_privkey(older) != null);
     var text = "";
-    if(am_it) { text += "Currently it."; }
+    if(am_it) { text += "Currently it. "; }
 
     if( account == older ){
         if(am_it){ text += " "; }
-        text += "Position addres unchanged.";
-    } else if( got_privkey(account) !=null ){
-        if(am_it){ text += " And also have the new key"; }
-        else{ text = "Have new key."; }
+        text += "Position addres unchanged. ";
+        
     }
+    if( got_privkey(account) !=null ){
+        text += "Have the key.";
+        note_el.className = "warn";        
+    } else{ note_el.className = ""; }
     note_el.innerText = text;
-    note_el.className = "warn";
+    
+    note_el.hidden = false;
 }
 
 var force_show_modification_panel = false;
@@ -51,6 +54,8 @@ function update_mod_panel() {
         _update_mod_note(ge("oneperid_input"), onePerID(), ge("oneperid_note"));
         _update_mod_note(ge("oneperid_set_input"), onePerIDSet(), ge("oneperid_set_note"));
         _update_mod_note(ge("puppeteer_input"), puppeteer(), ge("puppeteer_note"));
+
+        ge("lock_toggle").hidden = false;
     } else {
         ge("oneperid_input").hidden = true;
         ge("oneperid_set_input").hidden = true;
@@ -58,7 +63,9 @@ function update_mod_panel() {
         
         ge("oneperid_note").hidden = true;
         ge("oneperid_set_note").hidden = true;
-        ge("puppeteer_note").hidden = true;        
+        ge("puppeteer_note").hidden = true;
+        
+        ge("lock_toggle").hidden = true;
     }
 }
 

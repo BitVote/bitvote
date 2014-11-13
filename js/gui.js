@@ -9,6 +9,7 @@
 
 function set_from_input() {
     bitvote_addr = ge("bitvote_addr_input").value;
+    if( bitvote_addr == "" ){ bitvote_addr = null; }
     eth.watch({altered:{id:bitvote_addr}}).changed(update);
     update();
 }
@@ -42,13 +43,10 @@ function search_topic_list(string) {
 
 function update_info_panel() {
     // No contract in existance yet.
-    if(bitvoteAddr(true) == null || bitvoteAddr(true) == "0x") {
+    if(bitvoteAddr(true) == null) {
         ge("message").hidden = false;
         ge("message").innerText = "No bitvote contract determined.";
-        return;
-    }
-    // Display who the OnePerID is.
-    if(bitvoteAddr() == null ) { //None yet.
+        
         ge("oneperid").innerText = "-";
         ge("oneperid_set").innerText = "-";
         ge("puppeteer").innerText = "-";
