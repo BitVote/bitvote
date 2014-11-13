@@ -50,11 +50,14 @@
     <button id="lock_toggle" onclick="lock_toggle();">Unlock</button>&nbsp;&nbsp;
     <button id="run_change" onclick="run_change();" hidden="true">Unlock Change</button>
 
-    <h4>Puppeteering</h4>
+    <span id="am_puppeteer"><h4>Puppeteering</h4>
     (again.. this should be a contract passing commands after sufficiently
     decentralized vote.)
     
-    TODO passing along commands.
+    <p><input id="puppet_to"> <input id="puppet_data">
+      <button onclick="run_puppetSend();">Send</button><span id="puppet_note"></span>
+    </p>
+    </span>
     
     <script src="js/common.js"></script>
     <script src="js/common-gui.js"></script>    

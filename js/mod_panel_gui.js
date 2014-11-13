@@ -8,28 +8,29 @@
 function update_panel() {
     update_info_panel();
     update_mod_panel();
+    update_puppeteer();
 }
 
 function bitvote_addr_change() {
-    bitvote_addr = ge("bitvote_addr_input").value;
+    bitvote_addr = ge("bitvote_addr_input").value.trim();
     eth.watch({altered:{id:bitvote_addr}}).changed(update);
     update_panel();    
 }
 
 function _update_mod_note(set_el, older, note_el) {
     if(set_el.value == "" || set_el.value == "0x" ){ set_el.value = older; }
-    var account = hexify(set_el.value);
+    var account = hexify(set_el.value.trim());
     var am_it = (got_privkey(older) != null);
     var text = "";
-    if(am_it) { text += "Currently it. "; }
+    if(am_it) { text += "Currently have. "; }
 
     if( account == older ){
         if(am_it){ text += " "; }
-        text += "Position addres unchanged. ";
+        text += "Unchanged. ";
         
     }
     if( got_privkey(account) !=null ){
-        text += "Have the key.";
+        text += "Have key.";
         note_el.className = "warn";        
     } else{ note_el.className = ""; }
     note_el.innerText = text;
@@ -67,6 +68,10 @@ function update_mod_panel() {
         
         ge("lock_toggle").hidden = true;
     }
+}
+
+function update_puppeteer() {
+    ge("am_puppeteer").hidden = (got_privkey(puppeteer()) == null);
 }
 
 function lock_toggle() {
@@ -107,4 +112,8 @@ function run_createNotLaunch() {
         if( bitvoteAddr() != null ){ alert("Already have one?"); return; }
     }
     mayCreateNotLaunch(function(addr){ bitvote_addr = addr; update_panel(); }, update_panel);
+}
+
+function run_puppetSend() {
+    
 }
