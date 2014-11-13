@@ -1,0 +1,68 @@
+ <!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>BitVote Demo</title>
+    
+    <link rel="stylesheet" href="css/note.css">
+    <link rel="stylesheet" href="css/style.css">    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+  </head>
+  <body>
+    Panel shows info on the bitvote contract. It is a control panel if you have the
+    the puppeteer or oneperid position privkey.
+
+    <p>In the future the dictatorial Puppeteer and
+      OnePerIDSet position will be filled by contracts(no privkeys) that decentralize
+      control. (They're still dictatorial, but the dictator is a known program that gives
+      no-one power)</p>
+
+    <p>&rarr;<a href="index.html">Voting panel</a></p>
+
+    <span id="message"></span>
+    
+    <!--Launching and viewing non-account, non-topic state-->
+    <h4>Info and setting things(if allowed)</h4>
+    <button onclick="update_panel();">Update</button>
+    <table>
+      <tr><td>Bitvote addr:</td>
+        <td><input type="text" id="bitvote_addr_input" oninput="bitvote_addr_change();"></td>
+        <td id="bitvote_addr_note"></td>
+      </tr>
+      <tr><td>OnePerID:</td> <td id="oneperid">-</td>
+        <td><input type="text" id="oneperid_input" oninput="update_panel();"></td>
+        <td id="oneperid_note"></td>
+      </tr>
+      <tr><td>Changer:</td> <td id="oneperid_set">-</td>
+        <td><input type="text" id="oneperid_set_input" oninput="update_panel();"></td>
+        <td id="oneperid_set_note"></td></tr>
+      <tr><td>Puppeteer:</td> <td id="puppeteer">-</td>
+        <td><input type="text" id="puppeteer_input" oninput="update_panel();"></td>
+        <td id="puppeteer_note"></td></tr>
+    </table>
+    <button id="lock_toggle" onclick="lock_toggle();">Unlock</button>&nbsp;&nbsp;
+    <button id="run_change" onclick="run_change();" hidden="true">Unlock Change</button>
+
+    <h4>Puppeteering</h4>
+    (again.. this should be a contract passing commands after sufficiently
+    decentralized vote.)
+    
+    TODO passing along commands.
+
+    
+    <script src="js/common.js"></script>
+    <script src="js/contract.js"></script>
+    <script src="js/anyperid.js"></script>    
+    <script src="js/do.js"></script>
+    <script src="build/bitvote_creator.js"></script>
+    <script src="js/gui.js"></script>
+    <script src="js/mod_panel_gui.js"></script>    
+    <script>update_panel();</script>
+    
+</body></html>
