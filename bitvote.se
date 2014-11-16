@@ -86,7 +86,7 @@ code:
         while i < msg.datasize:
             args[i-1] = msg.data[i]            
             i = i + 1
-        return msg(tx.gas-100, msg.data[0], msg.value, args, msg.datasize-1)
+        return(msg(tx.gas-100, msg.data[0], msg.value, args, msg.datasize-1))
 
 // Anyone speaking.
     if msg.datasize == 1:

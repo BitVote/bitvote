@@ -9,6 +9,16 @@ import pyethereum
 from random import randrange
 t = pyethereum.tester
 
+OnePerID = 0x00
+OnePerIDSet = 0x20
+TopicI = 0x40
+Puppeteer = 0x60
+# 224 == 32*7, it is a lot, in the future likely 32, and magnet/swarm/contract links.
+TopicSz = 224
+    
+TopicStartI = 0x80
+
+
 # TODO.. all these convenience definitions are not well named and
 #  not well located.
 
@@ -34,6 +44,7 @@ c2 = s.contract('any_per_id.se', t.k0)  # TODO test of that alone.
 
 def ae(a, b, cond=None, what="N/A"):
     if (a !=b if cond == None else not cond):
+        print(a,b)
         print('-', map(stri,a), "vs", map(stri,b), ":", what)
         print(map(hex,a), "vs", map(hex,b), ":", what)
         assert False
@@ -62,19 +73,19 @@ HALFWAY = 340282366920938463463374607431768211456
 
 def non_exist_vote_count(j=None):
     if not j:
-        j = (i_store(0x40) - 0x60)/224
+        j = (i_store(TopicI) - TopicStartI)/TopicSz
     ae(s.send(t.k9, c, 0, [i("vote_count"), j]),
         [i("topic doesnt exist yet.")],
         "getting vote count nonexistance failed.")
 
 def non_exist_vote(j=None):
     if not j:
-        j = (i_store(0x40) - 0x60)/224
+        j = (i_store(TopicI) - TopicStartI)/TopicSz
     ae(s.send(t.k9, c, 0, [i("vote"), j, randrange(0,10)]),
        [i("topic doesnt exist yet(vote)")])
 
 def expect_topic_count(n, zeros=True):
-    ae([i_store(0x40)], [0x60 + 224*n])
+    ae([i_store(TopicI)], [TopicStartI + TopicSz*n])
     ae(s.send(t.k9, c, 0, [i("topic_count")]), [n])
     non_exist_vote(randrange(n, n+3))
     non_exist_vote_count(randrange(n, n+3))
@@ -89,10 +100,10 @@ def too_long_topic():
 def check():  # TODO this would be better with 'stateless call'
     s.mine()
     # Smaller than large.
-    ae(i_store(0x40), LARGE, i_store(0x40) < LARGE, "topic index unrealistic")
+    ae(i_store(TopicI), LARGE, i_store(TopicI) < LARGE, "topic index unrealistic")
     # Thing that can happen in any case.
-    non_exist_vote(store(0x40))
-    non_exist_vote_count(store(0x40))
+    non_exist_vote(store(TopicI))
+    non_exist_vote_count(store(TopicI))
     too_long_topic()
     ae(s.send(t.k9, c, 0, [1, 2]), [i("anyone bad 1")])
     ae(s.send(t.k9, c, 0, [1, 2, 3]), [i("anyone bad 2")])
@@ -119,18 +130,18 @@ def scenario_start():
     print("Run " + str(run_i) + " bitvote: " + c + " anyperid: " + c2)
     
     check()
-    ae(i_store(0x00), 0)
-    assert addr_store(0x20) == t.a0
-    ae(i_store(0x40), 0x60)
+    ae(i_store(OnePerID), 0)
+    assert addr_store(OnePerIDSet) == t.a0
+    ae(i_store(TopicI), TopicStartI)
     no_topics_yet()
 
 def initialize(have_topics=False):
     # TODO check that it responds with "not initialized" when registering.
     assert addr_store(0, c2) == t.a0
     # Gives himself full power, the bastard.
-    ae(s.send(t.k0, c, 0, [c2, t.a0]), [i("changed!")])
-    ae([store(0x00)], [int(c2,16)])
-    assert addr_store(0x20) == t.a0
+    ae(s.send(t.k0, c, 0, [c2, t.a0, t.a4]), [i("changed!")])
+    ae([store(OnePerID)], [int(c2,16)])
+    assert addr_store(OnePerIDSet) == t.a0
     check()
     for x in [[1,2], []]:
         ae(s.send(t.k0, c2, 0, x), [i("initializer bad")])
@@ -152,13 +163,13 @@ def add_topic(string=None):
     while len(args) <= 3:
         args.append(i(""))
     
-    j = i_store(0x40)
+    j = i_store(TopicI)
     if len(args) > 6:
         ae(s.send(t.k2, c, 0, args), [i("too long topic string")])
-        assert i_store(0x40) == j  # Cant have added it anyway.
+        assert i_store(TopicI) == j  # Cant have added it anyway.
     elif len(args) > 3:
         ae(s.send(t.k2, c, 0, args), [i("topic set")])
-        assert i_store(0x40) == j + 224   # Must have indeed moved forward.
+        assert i_store(TopicI) == j + TopicSz   # Must have indeed moved forward.
         assert i_store(j) == 0  # Must start with zero votes.
         for k in range(len(args)):  # Check message.
             assert i_store(j + 0x20 + k*0x20) == args[k]
