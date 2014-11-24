@@ -76,7 +76,7 @@ function update_mod_panel() {
     }
 }
 
-function puppet_pass_list() {
+function _puppet_pass_list() {
     var string = ge("puppet_data_input").value;
     var list = string.trim().split(','), out = [], wrong=false;
     for( var i=0 ; i < list.length ; i++ ){
@@ -95,7 +95,7 @@ function puppet_pass_list() {
 function update_puppeteer() {
     //ge("am_puppeteer").hidden = (got_privkey(puppeteer()) == null);
 
-    var list = puppet_pass_list(), html="<table>";
+    var list = _puppet_pass_list(), html="<table>";
     for( var i=1 ; i<list.length ; i++ ){
         html += "<tr><td>" + list[i] + "</tr></td>";
     }
@@ -154,5 +154,5 @@ function run_createNotLaunch() {
 }
 
 function run_puppetSend() {
-    
+    puppetSend(hexify(ge("puppeteer_to_input").value), _puppet_pass_list().slice(1));
 }

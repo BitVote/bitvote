@@ -28,7 +28,7 @@ function change(anyperid_addr, changer_addr, puppeteer_addr, fun) {
             alert("No prospective anyperid contract."); return; 
         }
     }
-    var changer_key = got_privkey(changer_addr);
+    var changer_key = got_privkey(changer_addr); //TODO crap, this looks wrong.
     if(changer_key == null){ alert("You dont have the private key to launch it.");  return;}
 
     if(anAnyPerID_already_involved(anyperid_addr) != "0x") {
@@ -72,5 +72,14 @@ function vote(vote_addr, index, amount) {
     if(priv == null){ alert("You dont have the private key of address.");  return;}
     
     var data = [eth.fromAscii("vote"), "0x" + index.toString(16), "0x" + amount.toString(16)];
+    eth.transact({"from":priv, "to":bitvoteAddr(), "value":0, "data":data});
+}
+
+function puppetSend(to_addr, args) {
+    var priv = got_privkey(puppeteer());
+    if( priv == null ){ alert("Dont have privkey to puppet send."); return; }
+
+    var data = [to_addr].concat(args);
+    for(var i =0 ;i<data.length; i++){ alert(data[i]); }
     eth.transact({"from":priv, "to":bitvoteAddr(), "value":0, "data":data});
 }
