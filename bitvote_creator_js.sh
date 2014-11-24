@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo -n '//From '  # Show the commit it is from.
+git log |head -n 1
+
 echo 'maybe_creating = false;  // Whether maybe_creating already.
 launch_key = eth.keys[1] // Second key is Bitvote launch key.
 
