@@ -39,8 +39,10 @@ def stri(i):
     return "".join(reversed(s))
 
 s = t.state()
-c = s.contract('bitvote.se', t.k0)
-c2 = s.contract('any_per_id.se', t.k0)  # TODO test of that alone.
+c = None #s.contract('bitvote.se', t.k0)
+c2 = None #s.contract('any_per_id.se', t.k0)  # TODO test of that alone.
+
+echo = None
 
 def ae(a, b, cond=None, what="N/A"):
     if (a !=b if cond == None else not cond):
@@ -114,6 +116,11 @@ def check():  # TODO this would be better with 'stateless call'
     ae(s.send(t.k0, c, 0, []), [i("OnePerIDSet bad")])
     ae(s.send(t.k0, c, 0, [randrange(LARGE)]), [i("OnePerIDSet bad")])
 
+    if i_store(Puppeteer) != 0:
+        assert i_store(Puppeteer) == int(t.a4, 16)
+        r = randrange(2**64)  # Talk to echo-1.se via puppeteer, see if it works.
+        ae(s.send(t.k4, c, 0, [echo, r]), [r])
+
 def no_topics_yet():
     non_exist_vote_count(0)
     non_exist_vote(0)
@@ -123,9 +130,10 @@ run_i = 0
 
 def scenario_start():
     s.mine()  # Otherwise a series of tests could hit the block gas limit.
-    global c, c2, run_i
+    global c, c2, run_i, echo
     c = s.contract('bitvote.se', t.k0)
     c2 = s.contract('any_per_id.se', t.k0)
+    echo = s.contract('other/echo-1.se', t.k0)
     run_i = run_i + 1
     print("Run " + str(run_i) + " bitvote: " + c + " anyperid: " + c2)
     
@@ -140,6 +148,7 @@ def initialize(have_topics=False):
     assert addr_store(0, c2) == t.a0
     # Gives himself full power, the bastard.
     ae(s.send(t.k0, c, 0, [c2, t.a0, t.a4]), [i("changed!")])
+    
     ae([store(OnePerID)], [int(c2,16)])
     assert addr_store(OnePerIDSet) == t.a0
     check()
