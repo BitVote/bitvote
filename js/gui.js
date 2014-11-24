@@ -25,7 +25,7 @@ function run_createTopic() {
 
 function run_vote() {
     if(got_index == null){ alert("Dont have an index to vote for."); return; }
-    vote(ge("vote_from_addr_input").value, got_index, ge("vote_amount_input").value);
+    vote(ge("vote_from_addr_input").value, got_index, parseInt(ge("vote_amount_input").value));
 }
 //TODO more notes about input.
 
@@ -80,6 +80,9 @@ function update() {
             note.className = "warn";
         } else if( hexify(input) == changer() ) {
             note.innerText = "That address already sets the OnePerID";
+            note.className = "warn";
+        } else if( hexify(input) == puppeteer() ) {
+            note.innerText = "That address is the puppeteer";
             note.className = "warn";
         }
     } else {

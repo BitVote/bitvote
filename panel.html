@@ -54,10 +54,12 @@
     (again.. this should be a contract passing commands after sufficiently
     decentralized vote.)
     
-    <p><input id="puppet_to"> <input id="puppet_data">
+    <p><input id="puppeteer_to_input"> <input id="puppet_data_input" oninput="update_puppeteer()">
       <button onclick="run_puppetSend();">Send</button><span id="puppet_note"></span>
-    </p>
+      <p><b>Arguments:</b> <span id="puppeteer_repeat_args"></span></p>
+    </p><span id="puppeteer_msg_note"></span>
     </span>
+    <p id="Response"></p>
     
     <script src="js/common.js"></script>
     <script src="js/common-gui.js"></script>    

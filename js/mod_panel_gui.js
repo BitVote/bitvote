@@ -52,8 +52,14 @@ function update_mod_panel() {
         ge("changer_input").hidden = false;
         ge("puppeteer_input").hidden = false;
 
-        _update_mod_note(ge("oneperid_input"),  onePerID(),  ge("oneperid_note"));
+        oneperid_note = ge("oneperid_note");
+        _update_mod_note(ge("oneperid_input"),  onePerID(),  oneperid_note);
+        if( anAnyPerID_already_involved(hexify(ge("oneperid_input").value)) ){
+            oneperid_note.className = "warn";
+            oneperid_note.innerText = "Already knows a bitvote?";
+        }        
         _update_mod_note(ge("changer_input"),   changer(),   ge("changer_note"));
+        
         _update_mod_note(ge("puppeteer_input"), puppeteer(), ge("puppeteer_note"));
 
         ge("lock_toggle").hidden = false;
@@ -70,8 +76,41 @@ function update_mod_panel() {
     }
 }
 
+function puppet_pass_list() {
+    var string = ge("puppet_data_input").value;
+    var list = string.trim().split(','), out = [], wrong=false;
+    for( var i=0 ; i < list.length ; i++ ){
+        var cur = list[i].trim();
+        if( cur[0] == '"' ){
+            out.push(eth.fromAscii(cur.substr(1,cur.length-1)));
+        } else {
+            var v = parseInt(cur).toString(16);
+            if( v == "NaN" ){ if( list.length!=1 ){ wrong = true; out.push("INVALID"); } }
+            else{ out.push("0x" + v.toString(16)); }
+        }
+    }
+    return [wrong].concat(out);
+}
+
 function update_puppeteer() {
-    ge("am_puppeteer").hidden = (got_privkey(puppeteer()) == null);
+    //ge("am_puppeteer").hidden = (got_privkey(puppeteer()) == null);
+
+    var list = puppet_pass_list(), html="<table>";
+    for( var i=1 ; i<list.length ; i++ ){
+        html += "<tr><td>" + list[i] + "</tr></td>";
+    }
+    html += "</table>";
+    ge("puppeteer_repeat_args").innerHTML = html;
+    var note = ge("puppeteer_msg_note");
+    note.innerText = "";
+    note.className = "";
+    if(ge("puppeteer_to_input").value == ""){
+        note.innerText = "No address to send to.";
+        note.className = "warn";
+    } else if( list[0] ){
+        note.innerText = "Input not good.";
+        note.className = "warn";
+    }
 }
 
 function lock_toggle() {

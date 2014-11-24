@@ -3,8 +3,8 @@ Rough Bitvote prototype, not intended for real use yet.
 # Note:
 Should work on 
 
-* pyethereum `c1c81d5110a074a07289cad7e7e0773e9be0d2f4`
-* serpent `ccae7a0d346d762db17fab591b0091ebe272ebca`
+* pyethereum `537d85f206a5fa29aedc61a6e56a9bada4668fa8`
+* serpent [this branch](https://github.com/ethereum/serpent/pull/21)
 
 # TODO
 
@@ -15,3 +15,8 @@ Should work on
   + Will in the end want a test that
     * Tries many variations.
     * Tries attacks?
+    
+* Javascript needs cleanup and a nicer approach. For instance, perhaps any
+  change of value just does things based on the change.
+  
+  + Once cleaned up, more testing here too? (simulate the buttons)

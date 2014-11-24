@@ -35,7 +35,7 @@ function changer(){ return bvStateAt("0x20"); }
 function puppeteer(){ return bvStateAt("0x60"); }
 
 var TopicI = 0x40;
-var TopicStartI = 0x60;
+var TopicStartI = 0x80;
 var TopicSz = 224;
 
 // Asking stuff about topics.

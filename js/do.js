@@ -20,7 +20,7 @@ function mayCreateNotLaunch(bitvote_fun, anyperid_fun) {
 //  total control over it.
 
 // Tells the bitvote contract which the OnePerID contract is.
-function change(anyperid_addr, anyperid_set_addr, puppeteer_addr, fun) {
+function change(anyperid_addr, changer_addr, puppeteer_addr, fun) {
     var addr = bitvoteAddr();
     if(safety) {
         if(addr == "0x" || addr == null){ alert("No bitvote contract"); return; }
@@ -28,17 +28,17 @@ function change(anyperid_addr, anyperid_set_addr, puppeteer_addr, fun) {
             alert("No prospective anyperid contract."); return; 
         }
     }
-    var changer_key = got_privkey(anyperid_set_addr);
+    var changer_key = got_privkey(changer_addr);
     if(changer_key == null){ alert("You dont have the private key to launch it.");  return;}
 
-    if(eth.stateAt(anyperid_addr, "0x00") != "0x") {
+    if(anAnyPerID_already_involved(anyperid_addr) != "0x") {
         if( eth.stateAt(anyperid_addr, "0x20") != "0x" ){
             alert("Inconsistent state AnyPerID!"); return;
         }
-        eth.transact({"from":changer_key, "to":anyperid_set_addr, "value":0, "data":[addr]});
+        eth.transact({"from":changer_key, "to":anyperid_addr, "value":0, "data":[addr]});
     }
   // First argument the new anyperid, and second keeping full control to set later,
-    var data = [anyperid_addr, anyperid_set_addr, puppeteer_addr];
+    var data = [anyperid_addr, changer_addr, puppeteer_addr];
     eth.transact({"from":changer_key, "to":addr, "value":0, "data":data}, fun);
 }
 
@@ -70,7 +70,7 @@ function vote(vote_addr, index, amount) {
     }
     var priv = got_privkey(vote_addr);
     if(priv == null){ alert("You dont have the private key of address.");  return;}
-
+    
     var data = [eth.fromAscii("vote"), "0x" + index.toString(16), "0x" + amount.toString(16)];
     eth.transact({"from":priv, "to":bitvoteAddr(), "value":0, "data":data});
 }

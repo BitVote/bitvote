@@ -11,3 +11,7 @@ function anyPerID_Initializer() {
 function anyPerID_Bitvote() {
     return eth.stateAt(onePerID(), "0x20");
 }
+
+function anAnyPerID_already_involved(c) {
+    return eth.stateAt(c, "0x20") != 0;
+}
