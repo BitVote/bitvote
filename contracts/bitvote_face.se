@@ -1,0 +1,84 @@
+//  Copyright (C) 07-03-2015 Jasper den Ouden.
+//
+//  This is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+extern teller_iface: [changer_change:a:_]
+
+data changer   // Address that can change special positions.
+// The 'face' of Bitvote only thing we can't change.(unless you count NameReg changes?!)
+//  Just a front that gathers topics and votes thereon.
+// Allowing the backend to be very changable.
+data teller    // Address from which we believe vote-counts are true.
+data puppeteer // Address that allow this thing to do anything.
+
+data topic_i   // Next index to add, simultaniously the number of entries.
+data topics[](votes, timestamp, datastring[8])
+
+def init():
+     self.changer = msg.sender
+
+def changer_change(pass:arr):
+    if msg.sender == self.changer: // Must be the current changer.
+        self.changer   = pass[0]
+        self.teller    = pass[1]
+        self.puppeteer = pass[2]
+        passdown = array(256)
+        i = 3  // Hrmm..
+        while i < max(len(pass), 256): 
+            passdown[i - 3] = pass[i]
+            i += 1
+        // No idea...
+        // teller.teller_iface::changer_change(passdown)
+
+// Teller tells us it has votes.
+def teller_add_votes(on_i, amount):
+    if msg.sender == self.teller && on_i < self.topic_i:
+        self.topics[on_i].votes += amount
+        return amount
+    return msg.sender
+
+def puppeteer_command(to_addr, data[]):
+    if msg.sender == self.puppeteer:
+        // TODO legit?
+        call(msg.gas-1000, to_addr, msg.value, data, len(data), 0, 0)
+
+//Anyone can add a datastring.
+def add_datastring(datastr:arr):
+    j = self.topic_i
+    self.topics[j].votes = 0
+    self.topics[j].timestamp = block.timestamp
+    i = 0
+    while i < 8:
+        self.topics[j].datastring[i] = datastr[i]
+        i += 1
+    self.topic_i = j + 1
+
+// Accessing.
+def changer():
+    return self.changer
+
+def teller():
+    return self.teller
+
+def puppeteer():
+    return self.puppeteer
+
+def topic_cnt():
+    return self.topic_i
+
+def get_topic_votes(i):
+    return self.topics[i].votes
+
+def get_topic_timestamp(i):
+    return self.topics[i].timestamp
+
+def get_topic_datastr(j):
+    datastr = array(8)
+    i = 0
+    while i < 8:
+        datastr[i] = self.topics[j].datastring[i]
+        i += 1
+    return(datastr, items=8)
