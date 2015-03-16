@@ -8,8 +8,9 @@ t = pyethereum.tester
 
 from pyethereum.blocks import BLOCK_REWARD
 
-s = None
-c = None
+# TODO get, test the changer.
+
+s, c = None, None  # State and contract
 specials = [None, None, None]
 entries = None
 

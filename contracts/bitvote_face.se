@@ -5,7 +5,7 @@
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-extern teller_iface: [changer_change:a:_]
+extern teller_iface: [changer_change:a]
 
 data changer   // Address that can change special positions.
 // The 'face' of Bitvote only thing we can't change.(unless you count NameReg changes?!)
@@ -30,7 +30,7 @@ def changer_change(pass:arr):
         while i < max(len(pass), 256): 
             passdown[i - 3] = pass[i]
             i += 1
-        // No idea...
+        // No idea... TODO need it!
         // teller.teller_iface::changer_change(passdown)
 
 // Teller tells us it has votes.
