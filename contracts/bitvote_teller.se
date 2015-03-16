@@ -5,11 +5,12 @@
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-extern face: [oneperid teller_add_votes]
+extern face: [oneperid teller_add_votes:ii]
 
 data face  // (the face, never changes, equal to the changer)
-data start_vote_time
 data oneperid // Is allowed to change addresses.
+
+data start_vote_time
 
 // Accounts are split  first bit is frozen/not, next 127, creation time,
 //  then 128 "vote time position"
@@ -18,35 +19,35 @@ data accounts[]
 HALFWAY = 340282366920938463463374607431768211456
 
 def init():
-    face = msg.sender
-    start_vote_time = 3600*24*31
+    self.face = msg.sender
+    self.start_vote_time = 3600*24*31
 
 def changer_change(pass:arr):
     if msg.sender == face:
-        face = pass[0]
-        oneperid = pass[1]
-        start_vote_time = pass[2]
+        self.face = pass[0]
+        self.oneperid = pass[1]
+        self.start_vote_time = pass[2]
 
 // OnePerID special position priviledges.
 def oneperid_add(addr):
-    if msg.sender == oneperid:
+    if msg.sender == self.oneperid:
         a = accounts[addr]
         if a == 0:  // No addresst yet
-            accounts[addr] = 1 + 2*block.timestamp + HALFWAY*(block.timestamp - start_vote_time)
+            self.accounts[addr] = 1 + 2*block.timestamp + HALFWAY*(block.timestamp - self.start_vote_time)
         else:
             if a%2 == 0:
-                accounts[addr] = a + 1  // Unfreeze if it was frozen.
+                self.accounts[addr] = a + 1  // Unfreeze if it was frozen.
 
 // Freeze accounts.
 def oneperid_freeze(addr):
-    a = accounts[addr]
-    if a%2 != 0 & msg.sender == oneperid:
-        accounts[addr] = a + 1
+    a = self.accounts[addr]
+    if a%2 != 0 & msg.sender == self.oneperid:
+        self.accounts[addr] = a + 1
 
 // Remove an account outright.
 def oneperid_remove(addr):
-    if msg.sender == oneperid:
-        accounts[addr] = 0
+    if msg.sender == self.oneperid:
+        self.accounts[addr] = 0
 
  // Change the address that owns it.
 def move(from, to):
@@ -54,26 +55,35 @@ def move(from, to):
     // oneperid must do it.
     // Address gotta be there,(frozen is allowed)
     // new one may not be taken,
-    if a != 0 & (msg.sender == oneperid | msg.sender == from) & accounts[to] == 0:
-        accounts[to] = a  // Set it.
-        accounts[from] = 0 // Wipe the old one.
+    if a != 0 & (msg.sender == oneperid | msg.sender == from) & self.accounts[to] == 0:
+        self.accounts[to] = a  // Set it.
+        self.accounts[from] = 0 // Wipe the old one.
 
 // Voting for those that can.
 def vote(on_i, amount):
-    a = accounts[msg.sender]
+    a = self.accounts[msg.sender]
     // Exists, not frozen and enough vote time available.
     if a%2 != 0 && a/HALFWAY + amount < block.timestamp:
-        accounts[msg.sender] = a + HALFWAY*amount
+        self.accounts[msg.sender] = a + HALFWAY*amount
         // NOTE: if the index does not exist, votes are wasted.
-        face.teller_add_votes(on_i, amount, as=face)  // Tell the face immediately.
+        //TODO dammit.. get that to work..
+//        self.face.teller_add_votes(on_i, amount, as=face)  // Tell the face immediately.
 
 // Data access.
+def changer():
+    return self.face
+def oneperid():
+    return self.oneperid
+
 def account(addr):
-    return accounts[addr]
+    return self.accounts[addr]
 
 def vote_time(addr):
-    a = accounts[addr]
-    return a%2 * a/HALFWAY
+    a = self.accounts[addr]
+    return((a%2) * (a/HALFWAY))
 
 def account_created_time(addr):
-    return (accounts[addr]%HALFWAY)/2
+    return((self.accounts[addr] % HALFWAY) / 2)
+
+def start_vote_time():
+    return self.start_vote_time
