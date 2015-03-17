@@ -99,8 +99,8 @@ def move_around():
         r = random()
         if r < 0.3:
             move()
-##        elif r < 0.6:
- ##           freeze()
+        elif r < 0.6:
+            freeze()
         elif r < 0.8:
             add_existing()
         else:
