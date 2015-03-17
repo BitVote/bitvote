@@ -90,20 +90,29 @@ def add_existing(i=None):
     c.oneperid_add(a, sender=t.k2)
     ids[i] = (p, a, 2*(acc // 2) + 1)
 
-# TODO remove too.
+def remove(i=None):
+    i = i or randrange(len(ids))
+    p, a, _ = ids[i]    
+    c.oneperid_remove(a, sender=t.k2)
+    ids[i] = (p,a,0)
+    zeroids.append(a)
 
 def move_around():
     for _ in range(randrange(5,10)):
         if random() < 0.1:
             s.mine()
         r = random()
-        if r < 0.3:
+        if r < 0.2:
             move()
-        elif r < 0.6:
+        elif r < 0.4:
             freeze()
-        elif r < 0.8:
+        elif r < 0.6:
             add_existing()
+        elif r < 0.8:
+            remove()
         else:
+            add()
+        if len(ids) == 0:  # (code assumes at least one)
             add()
     check()
 
