@@ -36,8 +36,12 @@ def check():
         if acc:
             assert c.account(a) == acc, (a, c.account(a) / HALFWAY, acc/HALFWAY,
                                          c.account(a) % HALFWAY, acc%HALFWAY)
-    for a in zeroids:
-        assert c.account(a) == 0
+            assert c.created_time(a) == (acc % HALFWAY) // 2
+            assert c.vote_time_pos(a) == (acc // HALFWAY if acc%2 == 1 else 0)
+            assert c.vote_time_available(a) == \
+              ((acc // HALFWAY - s.block.timestamp) if acc%2 == 1 else 0)
+        else:
+            assert  a in zeroids
 
 def scenario_init():
     global specials
@@ -68,10 +72,11 @@ def scenario_add():
 def move(i=None):
     i = i or randrange(len(ids))
     pold, aold, acc = ids[i]
+    ids[i] = (pold, aold, 0)
     
     p,a = insecure_keypair()
     c.oneperid_move(aold, a, sender=t.k2)
-    ids[i] = (p, int(a, 16), acc)  # Update the test memory.
+    ids.append((p, int(a, 16), acc))  # Update the test memory.
     zeroids.append(aold)
 
 def freeze(i=None):
