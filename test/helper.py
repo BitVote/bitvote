@@ -30,3 +30,9 @@ def any_key(disallow=None):
         i += 1
     assert i < len(t.keys)
     return t.keys[i]
+
+def insecure_keypair(i=None):
+    i = i or randrange(2**256)
+    priv = u.sha3(str(i))
+    addr = u.privtoaddr(priv)
+    return priv, addr

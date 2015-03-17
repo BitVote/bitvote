@@ -23,7 +23,7 @@ def init():
     self.start_vote_time = 3600*24*31
 
 def changer_change(pass:arr):
-    if msg.sender == face:
+    if msg.sender == self.face:
         self.face = pass[0]
         self.oneperid = pass[1]
         self.start_vote_time = pass[2]
@@ -31,8 +31,8 @@ def changer_change(pass:arr):
 // OnePerID special position priviledges.
 def oneperid_add(addr):
     if msg.sender == self.oneperid:
-        a = accounts[addr]
-        if a == 0:  // No addresst yet
+        a = self.accounts[addr]
+        if a == 0:  // No address yet
             self.accounts[addr] = 1 + 2*block.timestamp + HALFWAY*(block.timestamp - self.start_vote_time)
         else:
             if a%2 == 0:
@@ -41,8 +41,8 @@ def oneperid_add(addr):
 // Freeze accounts.
 def oneperid_freeze(addr):
     a = self.accounts[addr]
-    if a%2 != 0 & msg.sender == self.oneperid:
-        self.accounts[addr] = a + 1
+    if a%2 == 1 & msg.sender == self.oneperid:
+        self.accounts[addr] = a - 1
 
 // Remove an account outright.
 def oneperid_remove(addr):
@@ -50,12 +50,12 @@ def oneperid_remove(addr):
         self.accounts[addr] = 0
 
  // Change the address that owns it.
-def move(from, to):
-    a = accounts[from]
+def oneperid_move(from, to):
+    a = self.accounts[from]
     // oneperid must do it.
     // Address gotta be there,(frozen is allowed)
     // new one may not be taken,
-    if a != 0 & (msg.sender == oneperid | msg.sender == from) & self.accounts[to] == 0:
+    if a != 0 & msg.sender == self.oneperid & self.accounts[to] == 0:
         self.accounts[to] = a  // Set it.
         self.accounts[from] = 0 // Wipe the old one.
 
@@ -78,7 +78,7 @@ def oneperid():
 def account(addr):
     return self.accounts[addr]
 
-def vote_time(addr):
+def vote_time_pos(addr):
     a = self.accounts[addr]
     return((a%2) * (a/HALFWAY))
 
