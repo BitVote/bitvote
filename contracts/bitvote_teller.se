@@ -40,9 +40,10 @@ def oneperid_add(addr):
 
 // Freeze accounts.
 def oneperid_freeze(addr):
-    a = self.accounts[addr]
-    if a%2 == 1 & msg.sender == self.oneperid:
-        self.accounts[addr] = a - 1
+    if msg.sender == self.oneperid:
+        a = self.accounts[addr]
+        if a%2 == 1:
+            self.accounts[addr] = a - 1
 
 // Remove an account outright.
 def oneperid_remove(addr):
@@ -51,13 +52,13 @@ def oneperid_remove(addr):
 
  // Change the address that owns it.
 def oneperid_move(from, to):
-    a = self.accounts[from]
-    // oneperid must do it.
-    // Address gotta be there,(frozen is allowed)
-    // new one may not be taken,
-    if a != 0 & msg.sender == self.oneperid & self.accounts[to] == 0:
-        self.accounts[to] = a  // Set it.
-        self.accounts[from] = 0 // Wipe the old one.
+    if msg.sender == self.oneperid:
+        a = self.accounts[from]
+        // Address gotta be there,(frozen is allowed)
+        // new one may not be taken,
+        if a != 0 & self.accounts[to] == 0:
+            self.accounts[to] = a  // Set it.
+            self.accounts[from] = 0 // Wipe the old one.
 
 // Voting for those that can.
 def vote(on_i, amount):
@@ -82,8 +83,12 @@ def vote_time_pos(addr):
     a = self.accounts[addr]
     return((a%2) * (a/HALFWAY))
 
+def vote_time_available(addr):
+    a = self.accounts[addr]
+    return (((a%2) * (a/HALFWAY)) - block.timestamp)
+
 def account_created_time(addr):
-    return((self.accounts[addr] % HALFWAY) / 2)
+    return ((self.accounts[addr] % HALFWAY) / 2)
 
 def start_vote_time():
     return self.start_vote_time
