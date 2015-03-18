@@ -56,16 +56,18 @@ def oneperid_move(from, to):
         a = self.accounts[from]
         // Address gotta be there,(frozen is allowed)
         // new one may not be taken,
-        if a != 0 & self.accounts[to] == 0:
-            self.accounts[to] = a  // Set it.
-            self.accounts[from] = 0 // Wipe the old one.
+        if a != 0:
+            if self.accounts[to] == 0:
+                self.accounts[to] = a  // Set it.
+                self.accounts[from] = 0 // Wipe the old one.
 
 // Voting for those that can.
 def vote(on_i, amount):
     a = self.accounts[msg.sender]
     // Exists, not frozen and enough vote time available.
-    if a%2 != 0 && a/HALFWAY + amount < block.timestamp:
-        self.accounts[msg.sender] = a + HALFWAY*amount
+    if a%2 != 0:
+        if a/HALFWAY + amount < block.timestamp:
+            self.accounts[msg.sender] = a + HALFWAY*amount
         // NOTE: if the index does not exist, votes are wasted.
         //TODO dammit.. get that to work..
 //        self.face.teller_add_votes(on_i, amount, as=face)  // Tell the face immediately.
@@ -85,9 +87,12 @@ def vote_time_pos(addr):
 
 def vote_time_available(addr):
     a = self.accounts[addr]
-    return (((a%2) * (a/HALFWAY)) - block.timestamp)
+    if a%2 == 1:
+        return((a/HALFWAY) - block.timestamp)
+    else:
+        return 0
 
-def account_created_time(addr):
+def created_time(addr):
     return ((self.accounts[addr] % HALFWAY) / 2)
 
 def start_vote_time():
