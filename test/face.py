@@ -92,6 +92,10 @@ def scenario_add_votes():
     event_wrong_add_votes()
     check()
 
+# TODO test wrong cases;
+# * random smo trying to play special positions.
+# * Things the special postions might do wrong.
+
 scenario_add_votes()
 
 # TODO check the puppeteer. Check changer a bit more?
